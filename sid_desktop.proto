@@ -2,9 +2,9 @@ syntax = "proto3";
 
 // run `protoc --go_out=plugins=grpc:. ./sid_desktop.proto` in root directory
 
-option go_package = "./proto";
+option go_package = "github.com/BabySid/proto";
 
-package proto;
+package desktop;
 
 service SidDesktop {
   rpc UploadWebInfo(UploadWebInfoRequest) returns (UploadWebInfoResponse) {}
