@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+option go_package = "github.com/BabySid/proto/sodor";
+
+service FatController {
+  rpc CreateJob (Job) returns (Reply) {}
+}
+
+message Reply {
+}
+
+enum TaskState {
+  TS_INIT = 0;
+  TS_RUNNING = 1;
+  TS_STOPPED = 2;
+}
+
+message Task {
+  string name = 1;
+
+}
+
+message Job {
+  string name = 1;
+  repeated Task tasks = 2;
+}
