@@ -15,9 +15,25 @@ enum TaskState {
   TS_STOPPED = 2;
 }
 
+enum SchedulerMode {
+  SM_None = 0;
+  SM_Crontab = 1;
+}
+
+message SchedulerParam {
+  string ct_spec = 1;
+}
+
+message SchedulerOption {
+  SchedulerMode mode = 1;
+  SchedulerParam param = 2;
+}
+
 message Task {
   string name = 1;
-
+  bytes script = 2;
+  string host = 3;
+  SchedulerOption option = 4;
 }
 
 message Job {
