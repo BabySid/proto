@@ -22,7 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type FatControllerClient interface {
-	CreateJob(ctx context.Context, in *Job, opts ...grpc.CallOption) (*Reply, error)
+	CreateJob(ctx context.Context, in *Job, opts ...grpc.CallOption) (*JobReply, error)
 }
 
 type fatControllerClient struct {
@@ -33,8 +33,8 @@ func NewFatControllerClient(cc grpc.ClientConnInterface) FatControllerClient {
 	return &fatControllerClient{cc}
 }
 
-func (c *fatControllerClient) CreateJob(ctx context.Context, in *Job, opts ...grpc.CallOption) (*Reply, error) {
-	out := new(Reply)
+func (c *fatControllerClient) CreateJob(ctx context.Context, in *Job, opts ...grpc.CallOption) (*JobReply, error) {
+	out := new(JobReply)
 	err := c.cc.Invoke(ctx, "/FatController/CreateJob", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -46,7 +46,7 @@ func (c *fatControllerClient) CreateJob(ctx context.Context, in *Job, opts ...gr
 // All implementations must embed UnimplementedFatControllerServer
 // for forward compatibility
 type FatControllerServer interface {
-	CreateJob(context.Context, *Job) (*Reply, error)
+	CreateJob(context.Context, *Job) (*JobReply, error)
 	mustEmbedUnimplementedFatControllerServer()
 }
 
@@ -54,7 +54,7 @@ type FatControllerServer interface {
 type UnimplementedFatControllerServer struct {
 }
 
-func (UnimplementedFatControllerServer) CreateJob(context.Context, *Job) (*Reply, error) {
+func (UnimplementedFatControllerServer) CreateJob(context.Context, *Job) (*JobReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateJob not implemented")
 }
 func (UnimplementedFatControllerServer) mustEmbedUnimplementedFatControllerServer() {}

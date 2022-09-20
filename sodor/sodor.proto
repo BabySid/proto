@@ -3,10 +3,12 @@ syntax = "proto3";
 option go_package = "github.com/BabySid/proto/sodor";
 
 service FatController {
-  rpc CreateJob (Job) returns (Reply) {}
+  rpc CreateJob (Job) returns (JobReply) {}
 }
 
-message Reply {}
+message JobReply {
+  int64 id = 1;
+}
 
 enum TaskState {
   TS_INIT = 0;
