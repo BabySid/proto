@@ -45,11 +45,14 @@ message Job {
   TaskRelation relations = 6;
 }
 
+enum ConditionType {
+  CT_ExitCode = 0;
+}
 message TaskRelation {
   string pre_task = 1;
   string post_task = 2;
   string cur_task = 3;
-  string condition_type = 4;
+  ConditionType condition_type = 4;
 }
 
 message AlertGroup {
