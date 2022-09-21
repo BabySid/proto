@@ -51,10 +51,9 @@ enum ConditionType {
   CT_ExitCode = 0;
 }
 message TaskRelation {
-  string pre_task = 1;
-  string post_task = 2;
-  string cur_task = 3;
-  ConditionType condition_type = 4;
+  string from_task = 1;
+  string to_task = 2;
+  ConditionType condition_type = 3;
 }
 
 message AlertGroup {
