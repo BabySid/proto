@@ -35,7 +35,7 @@ message Task {
   SchedulerMode scheduler_mode = 7;
   RoutineSpec routine_spec = 8;
   string script = 9;
-  int64 running_timeout = 10;
+  int32 running_timeout = 10;
 }
 
 message Job {
