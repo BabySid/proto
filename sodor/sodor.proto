@@ -44,7 +44,7 @@ message Job {
   int64 update_at = 3;
   string name = 4;
   repeated Task tasks = 5;
-  TaskRelation relations = 6;
+  repeated TaskRelation relations = 6;
 }
 
 enum ConditionType {
