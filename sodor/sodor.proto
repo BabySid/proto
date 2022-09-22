@@ -17,12 +17,24 @@ enum TaskState {
 }
 
 enum SchedulerMode {
-  SM_None = 0;
-  SM_Crontab = 1;
+  SM_Null = 0;
+  SM_None = 1;
+  SM_Crontab = 2;
 }
 
 message RoutineSpec {
   string ct_spec = 1;
+}
+
+enum HostType {
+  HT_Null = 0;
+  HT_IP = 1;
+  HT_Tag = 2;
+}
+
+message Host {
+  HostType type = 1;
+  repeated string nodes = 2;
 }
 
 message Task {
@@ -31,7 +43,7 @@ message Task {
   int64 update_at = 3;
   int64 job_id = 4;
   string name = 5;
-  string running_hosts = 6;
+  repeated Host running_hosts = 6;
   SchedulerMode scheduler_mode = 7;
   RoutineSpec routine_spec = 8;
   string script = 9;
