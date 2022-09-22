@@ -47,13 +47,9 @@ message Job {
   repeated TaskRelation relations = 6;
 }
 
-enum ConditionType {
-  CT_ExitCode = 0;
-}
 message TaskRelation {
   string from_task = 1;
   string to_task = 2;
-  ConditionType condition_type = 3;
 }
 
 message AlertGroup {
