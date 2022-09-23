@@ -7,7 +7,7 @@ service FatController {
 }
 
 message JobReply {
-  int64 id = 1;
+  int32 id = 1;
 }
 
 enum TaskState {
