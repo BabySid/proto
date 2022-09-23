@@ -38,10 +38,10 @@ message Host {
 }
 
 message Task {
-  int64  id = 1;
-  int64 create_at = 2;
-  int64 update_at = 3;
-  int64 job_id = 4;
+  int32  id = 1;
+  int32 create_at = 2;
+  int32 update_at = 3;
+  int32 job_id = 4;
   string name = 5;
   repeated Host running_hosts = 6;
   SchedulerMode scheduler_mode = 7;
@@ -51,9 +51,9 @@ message Task {
 }
 
 message Job {
-  int64  id = 1;
-  int64 create_at = 2;
-  int64 update_at = 3;
+  int32  id = 1;
+  int32 create_at = 2;
+  int32 update_at = 3;
   string name = 4;
   repeated Task tasks = 5;
   repeated TaskRelation relations = 6;
@@ -69,9 +69,9 @@ message TaskRelation {
 }
 
 message AlertGroup {
-  int64  id = 1;
-  int64 create_at = 2;
-  int64 update_at = 3;
+  int32  id = 1;
+  int32 create_at = 2;
+  int32 update_at = 3;
   string name = 4;
   repeated int64 plugin_ids = 5;
 }
@@ -81,15 +81,15 @@ message AlertPluginParam {
 }
 
 message AlertPlugin {
-  int64  id = 1;
-  int64 create_at = 2;
-  int64 update_at = 3;
+  int32  id = 1;
+  int32 create_at = 2;
+  int32 update_at = 3;
   string catalog = 4;
   AlertPluginParam params = 5;
 }
 
 message AlertHistory {
-  int64  id = 1;
-  int64 create_at = 2;
-  int64 update_at = 3;
+  int32  id = 1;
+  int32 create_at = 2;
+  int32 update_at = 3;
 }
