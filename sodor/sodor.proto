@@ -59,6 +59,10 @@ message Job {
   repeated TaskRelation relations = 6;
 }
 
+message Jobs {
+  repeated Job jobs = 1;
+}
+
 message TaskRelation {
   string from_task = 1;
   string to_task = 2;
