@@ -44,10 +44,8 @@ message Task {
   int32 job_id = 4;
   string name = 5;
   repeated Host running_hosts = 6;
-  SchedulerMode scheduler_mode = 7;
-  RoutineSpec routine_spec = 8;
-  string script = 9;
-  int32 running_timeout = 10;
+  string script = 7;
+  int32 running_timeout = 8;
 }
 
 message Job {
@@ -55,8 +53,10 @@ message Job {
   int32 create_at = 2;
   int32 update_at = 3;
   string name = 4;
-  repeated Task tasks = 5;
-  repeated TaskRelation relations = 6;
+  SchedulerMode scheduler_mode = 5;
+  RoutineSpec routine_spec = 6;
+  repeated Task tasks = 7;
+  repeated TaskRelation relations = 8;
 }
 
 message Jobs {
