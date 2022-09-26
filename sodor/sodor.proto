@@ -97,6 +97,10 @@ message TaskInstance {
   google.protobuf.Struct output_vars = 10;
 }
 
+message TaskInstances {
+  repeated TaskInstance task_instances = 1;
+}
+
 // alert
 message AlertGroup {
   int32  id = 1;
