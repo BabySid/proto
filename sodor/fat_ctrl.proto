@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+option go_package = "github.com/BabySid/proto/sodor";
+
+import "sodor/sodor.proto";
+
+service FatController {
+  rpc HandShakeWithThomas (ThomasHandShakeReq) returns (ThomasHandShakeResp) {}
+  rpc UpdateTaskStatus(TaskInstance) returns (EmptyResponse) {}
+}
+
+// thomas
+message ThomasHandShakeReq {
+  int32 id = 1;
+  string name = 2;
+  string version = 3;
+  string proto = 4;
+  string host = 5;
+  int32  port = 6;
+  int32  pid = 7;
+  int32  start_time = 8;
+}
+
+message ThomasHandShakeResp {
+  int32 id = 1;
+}
+
+message TaskInstance {
+  int32 instance_id = 1;
+  int32  job_id = 2;
+  int32 task_id = 3;
+  int32 job_instance_id = 4;
+  int32 start_ts = 5;
+  int32 stop_ts = 6;
+  int32 pid = 7;
+  int32 exit_code = 8;
+  string exit_msg = 9;
+}

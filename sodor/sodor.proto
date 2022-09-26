@@ -2,13 +2,11 @@ syntax = "proto3";
 
 option go_package = "github.com/BabySid/proto/sodor";
 
-service FatController {
-  rpc CreateJob (Job) returns (JobReply) {}
-}
-
 message JobReply {
   int32 id = 1;
 }
+
+message EmptyResponse {}
 
 enum TaskState {
   TS_INIT = 0;
@@ -68,6 +66,7 @@ message TaskRelation {
   string to_task = 2;
 }
 
+// alert
 message AlertGroup {
   int32  id = 1;
   int32 create_at = 2;
@@ -77,7 +76,6 @@ message AlertGroup {
 }
 
 message AlertPluginParam {
-
 }
 
 message AlertPlugin {
