@@ -22,7 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ThomasClient interface {
-	RunTask(ctx context.Context, in *Task, opts ...grpc.CallOption) (*EmptyResponse, error)
+	RunTask(ctx context.Context, in *RunTaskRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
 }
 
 type thomasClient struct {
@@ -33,7 +33,7 @@ func NewThomasClient(cc grpc.ClientConnInterface) ThomasClient {
 	return &thomasClient{cc}
 }
 
-func (c *thomasClient) RunTask(ctx context.Context, in *Task, opts ...grpc.CallOption) (*EmptyResponse, error) {
+func (c *thomasClient) RunTask(ctx context.Context, in *RunTaskRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
 	out := new(EmptyResponse)
 	err := c.cc.Invoke(ctx, "/Thomas/RunTask", in, out, opts...)
 	if err != nil {
@@ -46,7 +46,7 @@ func (c *thomasClient) RunTask(ctx context.Context, in *Task, opts ...grpc.CallO
 // All implementations must embed UnimplementedThomasServer
 // for forward compatibility
 type ThomasServer interface {
-	RunTask(context.Context, *Task) (*EmptyResponse, error)
+	RunTask(context.Context, *RunTaskRequest) (*EmptyResponse, error)
 	mustEmbedUnimplementedThomasServer()
 }
 
@@ -54,7 +54,7 @@ type ThomasServer interface {
 type UnimplementedThomasServer struct {
 }
 
-func (UnimplementedThomasServer) RunTask(context.Context, *Task) (*EmptyResponse, error) {
+func (UnimplementedThomasServer) RunTask(context.Context, *RunTaskRequest) (*EmptyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RunTask not implemented")
 }
 func (UnimplementedThomasServer) mustEmbedUnimplementedThomasServer() {}
@@ -71,7 +71,7 @@ func RegisterThomasServer(s grpc.ServiceRegistrar, srv ThomasServer) {
 }
 
 func _Thomas_RunTask_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Task)
+	in := new(RunTaskRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -83,7 +83,7 @@ func _Thomas_RunTask_Handler(srv interface{}, ctx context.Context, dec func(inte
 		FullMethod: "/Thomas/RunTask",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ThomasServer).RunTask(ctx, req.(*Task))
+		return srv.(ThomasServer).RunTask(ctx, req.(*RunTaskRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

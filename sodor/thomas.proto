@@ -5,7 +5,13 @@ option go_package = "github.com/BabySid/proto/sodor";
 import "sodor/sodor.proto";
 
 service Thomas {
-  rpc RunTask (Task) returns (EmptyResponse) {}
+  rpc RunTask (RunTaskRequest) returns (EmptyResponse) {}
 }
 
-// thomas
+message RunTaskRequest {
+  int32 task_instance_id = 1;
+  int32 job_id = 2;
+  int32 task_id = 3;
+  int32 job_instance_id = 4;
+  Task task = 5;
+}

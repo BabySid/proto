@@ -26,8 +26,8 @@ message ThomasHandShakeResp {
 }
 
 message TaskInstance {
-  int32 instance_id = 1;
-  int32  job_id = 2;
+  int32 task_instance_id = 1;
+  int32 job_id = 2;
   int32 task_id = 3;
   int32 job_instance_id = 4;
   int32 start_ts = 5;
