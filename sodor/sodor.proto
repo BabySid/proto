@@ -16,7 +16,7 @@ enum TaskState {
   TS_STOPPED = 2;
 }
 
-enum SchedulerMode {
+enum ScheduleMode {
   SM_Null = 0;
   SM_None = 1;
   SM_Crontab = 2;
@@ -53,7 +53,7 @@ message Job {
   int32 create_at = 2;
   int32 update_at = 3;
   string name = 4;
-  SchedulerMode scheduler_mode = 5;
+  ScheduleMode schedule_mode = 5;
   RoutineSpec routine_spec = 6;
   repeated Task tasks = 7;
   repeated TaskRelation relations = 8;
