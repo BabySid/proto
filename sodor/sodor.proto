@@ -76,9 +76,8 @@ message JobInstance {
   int32 schedule_ts = 5;
   int32 start_ts = 6;
   int32 stop_ts = 7;
-  string progress = 8;
-  int32 exit_code = 9;
-  string exit_msg = 10;
+  int32 exit_code = 8;
+  string exit_msg = 9;
 }
 
 message JobInstances {
