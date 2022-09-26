@@ -6,7 +6,7 @@ import "sodor/sodor.proto";
 
 service FatController {
   rpc HandShakeWithThomas (ThomasHandShakeReq) returns (ThomasHandShakeResp) {}
-  rpc UpdateTaskStatus(TaskInstance) returns (EmptyResponse) {}
+  rpc UpdateTaskInstance(TaskInstance) returns (EmptyResponse) {}
 }
 
 // thomas

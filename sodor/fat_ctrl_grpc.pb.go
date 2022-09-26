@@ -23,7 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type FatControllerClient interface {
 	HandShakeWithThomas(ctx context.Context, in *ThomasHandShakeReq, opts ...grpc.CallOption) (*ThomasHandShakeResp, error)
-	UpdateTaskStatus(ctx context.Context, in *TaskInstance, opts ...grpc.CallOption) (*EmptyResponse, error)
+	UpdateTaskInstance(ctx context.Context, in *TaskInstance, opts ...grpc.CallOption) (*EmptyResponse, error)
 }
 
 type fatControllerClient struct {
@@ -43,9 +43,9 @@ func (c *fatControllerClient) HandShakeWithThomas(ctx context.Context, in *Thoma
 	return out, nil
 }
 
-func (c *fatControllerClient) UpdateTaskStatus(ctx context.Context, in *TaskInstance, opts ...grpc.CallOption) (*EmptyResponse, error) {
+func (c *fatControllerClient) UpdateTaskInstance(ctx context.Context, in *TaskInstance, opts ...grpc.CallOption) (*EmptyResponse, error) {
 	out := new(EmptyResponse)
-	err := c.cc.Invoke(ctx, "/FatController/UpdateTaskStatus", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/FatController/UpdateTaskInstance", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +57,7 @@ func (c *fatControllerClient) UpdateTaskStatus(ctx context.Context, in *TaskInst
 // for forward compatibility
 type FatControllerServer interface {
 	HandShakeWithThomas(context.Context, *ThomasHandShakeReq) (*ThomasHandShakeResp, error)
-	UpdateTaskStatus(context.Context, *TaskInstance) (*EmptyResponse, error)
+	UpdateTaskInstance(context.Context, *TaskInstance) (*EmptyResponse, error)
 	mustEmbedUnimplementedFatControllerServer()
 }
 
@@ -68,8 +68,8 @@ type UnimplementedFatControllerServer struct {
 func (UnimplementedFatControllerServer) HandShakeWithThomas(context.Context, *ThomasHandShakeReq) (*ThomasHandShakeResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method HandShakeWithThomas not implemented")
 }
-func (UnimplementedFatControllerServer) UpdateTaskStatus(context.Context, *TaskInstance) (*EmptyResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateTaskStatus not implemented")
+func (UnimplementedFatControllerServer) UpdateTaskInstance(context.Context, *TaskInstance) (*EmptyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateTaskInstance not implemented")
 }
 func (UnimplementedFatControllerServer) mustEmbedUnimplementedFatControllerServer() {}
 
@@ -102,20 +102,20 @@ func _FatController_HandShakeWithThomas_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
-func _FatController_UpdateTaskStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _FatController_UpdateTaskInstance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(TaskInstance)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FatControllerServer).UpdateTaskStatus(ctx, in)
+		return srv.(FatControllerServer).UpdateTaskInstance(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/FatController/UpdateTaskStatus",
+		FullMethod: "/FatController/UpdateTaskInstance",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FatControllerServer).UpdateTaskStatus(ctx, req.(*TaskInstance))
+		return srv.(FatControllerServer).UpdateTaskInstance(ctx, req.(*TaskInstance))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -132,8 +132,8 @@ var FatController_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _FatController_HandShakeWithThomas_Handler,
 		},
 		{
-			MethodName: "UpdateTaskStatus",
-			Handler:    _FatController_UpdateTaskStatus_Handler,
+			MethodName: "UpdateTaskInstance",
+			Handler:    _FatController_UpdateTaskInstance_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
