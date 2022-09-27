@@ -93,10 +93,11 @@ message TaskInstance {
   int32 job_instance_id = 6;
   int32 start_ts = 7;
   int32 stop_ts = 8;
-  int32 pid = 9;
-  int32 exit_code = 10;
-  string exit_msg = 11;
-  google.protobuf.Struct output_vars = 12;
+  string host = 9;
+  int32 pid = 10;
+  int32 exit_code = 11;
+  string exit_msg = 12;
+  google.protobuf.Struct output_vars = 13;
 }
 
 message TaskInstances {
