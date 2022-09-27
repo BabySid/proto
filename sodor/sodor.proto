@@ -16,6 +16,11 @@ enum TaskState {
   TS_STOPPED = 2;
 }
 
+enum TaskType {
+  TT_Null = 0;
+  TT_Shell = 1;
+}
+
 enum ScheduleMode {
   SM_Null = 0;
   SM_None = 1;
@@ -44,8 +49,9 @@ message Task {
   int32 job_id = 4;
   string name = 5;
   repeated Host running_hosts = 6;
-  string script = 7;
-  int32 running_timeout = 8;
+  TaskType type = 7;
+  string script = 8;
+  int32 running_timeout = 9;
 }
 
 message Job {
