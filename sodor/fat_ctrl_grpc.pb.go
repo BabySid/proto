@@ -22,7 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type FatControllerClient interface {
-	HandShakeWithThomas(ctx context.Context, in *ThomasHandShakeReq, opts ...grpc.CallOption) (*ThomasHandShakeResp, error)
+	HandShake(ctx context.Context, in *ThomasHandShakeReq, opts ...grpc.CallOption) (*ThomasHandShakeResp, error)
 	UpdateTaskInstance(ctx context.Context, in *TaskInstance, opts ...grpc.CallOption) (*EmptyResponse, error)
 }
 
@@ -34,9 +34,9 @@ func NewFatControllerClient(cc grpc.ClientConnInterface) FatControllerClient {
 	return &fatControllerClient{cc}
 }
 
-func (c *fatControllerClient) HandShakeWithThomas(ctx context.Context, in *ThomasHandShakeReq, opts ...grpc.CallOption) (*ThomasHandShakeResp, error) {
+func (c *fatControllerClient) HandShake(ctx context.Context, in *ThomasHandShakeReq, opts ...grpc.CallOption) (*ThomasHandShakeResp, error) {
 	out := new(ThomasHandShakeResp)
-	err := c.cc.Invoke(ctx, "/FatController/HandShakeWithThomas", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/FatController/HandShake", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +56,7 @@ func (c *fatControllerClient) UpdateTaskInstance(ctx context.Context, in *TaskIn
 // All implementations must embed UnimplementedFatControllerServer
 // for forward compatibility
 type FatControllerServer interface {
-	HandShakeWithThomas(context.Context, *ThomasHandShakeReq) (*ThomasHandShakeResp, error)
+	HandShake(context.Context, *ThomasHandShakeReq) (*ThomasHandShakeResp, error)
 	UpdateTaskInstance(context.Context, *TaskInstance) (*EmptyResponse, error)
 	mustEmbedUnimplementedFatControllerServer()
 }
@@ -65,8 +65,8 @@ type FatControllerServer interface {
 type UnimplementedFatControllerServer struct {
 }
 
-func (UnimplementedFatControllerServer) HandShakeWithThomas(context.Context, *ThomasHandShakeReq) (*ThomasHandShakeResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method HandShakeWithThomas not implemented")
+func (UnimplementedFatControllerServer) HandShake(context.Context, *ThomasHandShakeReq) (*ThomasHandShakeResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method HandShake not implemented")
 }
 func (UnimplementedFatControllerServer) UpdateTaskInstance(context.Context, *TaskInstance) (*EmptyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateTaskInstance not implemented")
@@ -84,20 +84,20 @@ func RegisterFatControllerServer(s grpc.ServiceRegistrar, srv FatControllerServe
 	s.RegisterService(&FatController_ServiceDesc, srv)
 }
 
-func _FatController_HandShakeWithThomas_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _FatController_HandShake_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ThomasHandShakeReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FatControllerServer).HandShakeWithThomas(ctx, in)
+		return srv.(FatControllerServer).HandShake(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/FatController/HandShakeWithThomas",
+		FullMethod: "/FatController/HandShake",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FatControllerServer).HandShakeWithThomas(ctx, req.(*ThomasHandShakeReq))
+		return srv.(FatControllerServer).HandShake(ctx, req.(*ThomasHandShakeReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -128,8 +128,8 @@ var FatController_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*FatControllerServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "HandShakeWithThomas",
-			Handler:    _FatController_HandShakeWithThomas_Handler,
+			MethodName: "HandShake",
+			Handler:    _FatController_HandShake_Handler,
 		},
 		{
 			MethodName: "UpdateTaskInstance",
