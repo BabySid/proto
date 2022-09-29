@@ -5,6 +5,7 @@ option go_package = "github.com/BabySid/proto/sodor";
 import "sodor/sodor.proto";
 
 service Thomas {
+  rpc HandShake (ThomasInstance) returns (ThomasReply) {}
   rpc RunTask (RunTaskRequest) returns (EmptyResponse) {}
 }
 
