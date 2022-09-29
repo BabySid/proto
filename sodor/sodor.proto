@@ -124,12 +124,13 @@ message ThomasInstance {
   int32 update_at = 3;
   string name = 4;
   string version = 5;
-  string host = 6;
-  int32 port = 7;
-  int32 pid = 8;
-  int32 start_time = 9;
-  int32 heart_beat_time = 10;
-  google.protobuf.Struct metrics = 11;
+  string proto = 6;
+  string host = 7;
+  int32 port = 8;
+  int32 pid = 9;
+  int32 start_time = 10;
+  int32 heart_beat_time = 11;
+  google.protobuf.Struct metrics = 12;
 }
 
 // alert
