@@ -8,6 +8,10 @@ message JobReply {
   int32 id = 1;
 }
 
+message ThomasReply {
+  int32 id = 1;
+}
+
 message EmptyResponse {}
 
 enum TaskState {
@@ -108,6 +112,24 @@ message TaskInstance {
 
 message TaskInstances {
   repeated TaskInstance task_instances = 1;
+}
+
+message ThomasInstances {
+  repeated ThomasInstance thomas_instances = 1;
+}
+
+message ThomasInstance {
+  int32 id = 1;
+  int32 create_at = 2;
+  int32 update_at = 3;
+  string name = 4;
+  string version = 5;
+  string host = 6;
+  int32 port = 7;
+  int32 pid = 8;
+  int32 start_time = 9;
+  int32 heart_beat_time = 10;
+  google.protobuf.Struct metrics = 11;
 }
 
 // alert
