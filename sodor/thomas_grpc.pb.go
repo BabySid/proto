@@ -22,7 +22,9 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ThomasClient interface {
-	HandShake(ctx context.Context, in *ThomasInstance, opts ...grpc.CallOption) (*ThomasReply, error)
+	// for Thomas_Static
+	// FatController Send HandShae(ThomasInfo:ID) To Thomas
+	HandShake(ctx context.Context, in *ThomasInfo, opts ...grpc.CallOption) (*ThomasReply, error)
 	RunTask(ctx context.Context, in *RunTaskRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
 }
 
@@ -34,7 +36,7 @@ func NewThomasClient(cc grpc.ClientConnInterface) ThomasClient {
 	return &thomasClient{cc}
 }
 
-func (c *thomasClient) HandShake(ctx context.Context, in *ThomasInstance, opts ...grpc.CallOption) (*ThomasReply, error) {
+func (c *thomasClient) HandShake(ctx context.Context, in *ThomasInfo, opts ...grpc.CallOption) (*ThomasReply, error) {
 	out := new(ThomasReply)
 	err := c.cc.Invoke(ctx, "/Thomas/HandShake", in, out, opts...)
 	if err != nil {
@@ -56,7 +58,9 @@ func (c *thomasClient) RunTask(ctx context.Context, in *RunTaskRequest, opts ...
 // All implementations must embed UnimplementedThomasServer
 // for forward compatibility
 type ThomasServer interface {
-	HandShake(context.Context, *ThomasInstance) (*ThomasReply, error)
+	// for Thomas_Static
+	// FatController Send HandShae(ThomasInfo:ID) To Thomas
+	HandShake(context.Context, *ThomasInfo) (*ThomasReply, error)
 	RunTask(context.Context, *RunTaskRequest) (*EmptyResponse, error)
 	mustEmbedUnimplementedThomasServer()
 }
@@ -65,7 +69,7 @@ type ThomasServer interface {
 type UnimplementedThomasServer struct {
 }
 
-func (UnimplementedThomasServer) HandShake(context.Context, *ThomasInstance) (*ThomasReply, error) {
+func (UnimplementedThomasServer) HandShake(context.Context, *ThomasInfo) (*ThomasReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method HandShake not implemented")
 }
 func (UnimplementedThomasServer) RunTask(context.Context, *RunTaskRequest) (*EmptyResponse, error) {
@@ -85,7 +89,7 @@ func RegisterThomasServer(s grpc.ServiceRegistrar, srv ThomasServer) {
 }
 
 func _Thomas_HandShake_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ThomasInstance)
+	in := new(ThomasInfo)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -97,7 +101,7 @@ func _Thomas_HandShake_Handler(srv interface{}, ctx context.Context, dec func(in
 		FullMethod: "/Thomas/HandShake",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ThomasServer).HandShake(ctx, req.(*ThomasInstance))
+		return srv.(ThomasServer).HandShake(ctx, req.(*ThomasInfo))
 	}
 	return interceptor(ctx, in, info, handler)
 }

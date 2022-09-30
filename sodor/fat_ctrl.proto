@@ -5,6 +5,8 @@ option go_package = "github.com/BabySid/proto/sodor";
 import "sodor/sodor.proto";
 
 service FatController {
-  rpc HandShake (ThomasInstance) returns (ThomasReply) {}
+  // for Thomas_Dynamic
+  // Thomas Send HandShae(ThomasInfo:host/port/pid/...) To FatController
+  rpc HandShake (ThomasInfo) returns (ThomasReply) {}
   rpc UpdateTaskInstance(TaskInstance) returns (EmptyResponse) {}
 }

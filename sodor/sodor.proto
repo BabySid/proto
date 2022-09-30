@@ -15,20 +15,20 @@ message ThomasReply {
 message EmptyResponse {}
 
 enum TaskState {
-  TS_INIT = 0;
+  TaskState_INIT = 0;
   TS_RUNNING = 1;
   TS_STOPPED = 2;
 }
 
 enum TaskType {
-  TT_Null = 0;
-  TT_Shell = 1;
+  TaskType_Null = 0;
+  TaskType_Shell = 1;
 }
 
 enum ScheduleMode {
-  SM_Null = 0;
-  SM_None = 1;
-  SM_Crontab = 2;
+  ScheduleMode_Null = 0;
+  ScheduleMode_None = 1;
+  ScheduleMode_Crontab = 2;
 }
 
 message RoutineSpec {
@@ -36,9 +36,9 @@ message RoutineSpec {
 }
 
 enum HostType {
-  HT_Null = 0;
-  HT_IP = 1;
-  HT_Tag = 2;
+  HostType_Null = 0;
+  HostType_IP = 1;
+  HostType_Tag = 2;
 }
 
 message Host {
@@ -118,7 +118,13 @@ message ThomasInstances {
   repeated ThomasInstance thomas_instances = 1;
 }
 
-message ThomasInstance {
+enum ThomasType {
+  Thomas_Null = 0;
+  Thomas_Static = 1;
+  Thomas_Dynamic = 2;
+}
+
+message ThomasInfo {
   int32 id = 1;
   int32 create_at = 2;
   int32 update_at = 3;
@@ -130,7 +136,20 @@ message ThomasInstance {
   int32 pid = 9;
   int32 start_time = 10;
   int32 heart_beat_time = 11;
-  google.protobuf.Struct metrics = 12;
+  ThomasType thomas_type = 12;
+  google.protobuf.Struct latest_metrics = 13;
+}
+
+message ThomasInstance {
+  ThomasInfo thomas = 1;
+  repeated ThomasMetrics metrics = 2;
+}
+
+message ThomasMetrics {
+  int32  id = 1;
+  int32 create_at = 2;
+  int32 update_at = 3;
+  google.protobuf.Struct metrics = 4;
 }
 
 // alert
