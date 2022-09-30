@@ -12,6 +12,10 @@ message ThomasReply {
   int32 id = 1;
 }
 
+message FatCtrlReply {
+  int32 id = 1;
+}
+
 message EmptyResponse {}
 
 enum TaskState {
@@ -114,8 +118,19 @@ message TaskInstances {
   repeated TaskInstance task_instances = 1;
 }
 
-// thomas
+// fat_ctrl
+message FatCtrlInfo {
+  int32 id = 1;
+  int32 create_at = 2;
+  int32 update_at = 3;
+  string name = 4;
+  string version = 5;
+  string proto = 6;
+  string host = 7;
+  int32 port = 8;
+}
 
+// thomas
 enum ThomasType {
   Thomas_Null = 0;
   Thomas_Static = 1;
