@@ -114,14 +114,16 @@ message TaskInstances {
   repeated TaskInstance task_instances = 1;
 }
 
-message ThomasInstances {
-  repeated ThomasInstance thomas_instances = 1;
-}
+// thomas
 
 enum ThomasType {
   Thomas_Null = 0;
   Thomas_Static = 1;
   Thomas_Dynamic = 2;
+}
+
+message ThomasInfos {
+  repeated ThomasInfo thomas_infos = 1;
 }
 
 message ThomasInfo {
@@ -138,6 +140,10 @@ message ThomasInfo {
   int32 heart_beat_time = 11;
   ThomasType thomas_type = 12;
   google.protobuf.Struct latest_metrics = 13;
+}
+
+message ThomasInstances {
+  repeated ThomasInstance thomas_instances = 1;
 }
 
 message ThomasInstance {
