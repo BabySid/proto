@@ -139,7 +139,8 @@ message ThomasInfo {
   int32 start_time = 10;
   int32 heart_beat_time = 11;
   ThomasType thomas_type = 12;
-  google.protobuf.Struct latest_metrics = 13;
+  string status = 13;
+  google.protobuf.Struct latest_metrics = 14;
 }
 
 message ThomasInstances {
