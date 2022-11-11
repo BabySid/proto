@@ -46,7 +46,7 @@ enum HostType {
 
 message Host {
   HostType type = 1;
-  repeated string nodes = 2;
+  string node = 2;
 }
 
 message Task {
@@ -58,7 +58,6 @@ message Task {
   repeated Host running_hosts = 6;
   TaskType type = 7;
   string script = 8;
-  int32 running_timeout = 9;
 }
 
 message Job {
