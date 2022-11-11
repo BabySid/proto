@@ -42,7 +42,6 @@ message RoutineSpec {
 enum HostType {
   HostType_Null = 0;
   HostType_IP = 1;
-  HostType_Tag = 2;
 }
 
 message Host {
