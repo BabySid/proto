@@ -116,6 +116,11 @@ message TaskInstances {
   repeated TaskInstance task_instances = 1;
 }
 
+message JobTaskInstances {
+    JobInstances job_instances = 1;
+    TaskInstances task_instances = 2;
+}
+
 // fat_ctrl
 message FatCtrlInfo {
   int32 id = 1;
