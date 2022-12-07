@@ -187,6 +187,22 @@ message AlertGroup {
   google.protobuf.Struct plugin_params = 5;
 }
 
+enum AlertPluginParamType {
+    APPT_String = 0;
+    APPT_Integer = 1;
+}
+
+message AlertPluginParams {
+  string name = 1;
+  AlertPluginParamType type = 2;
+  string desc_en = 3;
+}
+
+message AlertPlugin {
+  string name = 1;
+  AlertPluginParams params = 2;
+}
+
 message AlertHistory {
   int32 id = 1;
   int32 create_at = 2;
