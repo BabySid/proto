@@ -18,12 +18,6 @@ message FatCtrlReply {
 
 message EmptyResponse {}
 
-enum TaskState {
-  TaskState_INIT = 0;
-  TaskState_RUNNING = 1;
-  TaskState_STOPPED = 2;
-}
-
 enum TaskType {
   TaskType_Null = 0;
   TaskType_Shell = 1;

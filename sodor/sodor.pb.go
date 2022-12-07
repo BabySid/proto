@@ -21,55 +21,6 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type TaskState int32
-
-const (
-	TaskState_TaskState_INIT    TaskState = 0
-	TaskState_TaskState_RUNNING TaskState = 1
-	TaskState_TaskState_STOPPED TaskState = 2
-)
-
-// Enum value maps for TaskState.
-var (
-	TaskState_name = map[int32]string{
-		0: "TaskState_INIT",
-		1: "TaskState_RUNNING",
-		2: "TaskState_STOPPED",
-	}
-	TaskState_value = map[string]int32{
-		"TaskState_INIT":    0,
-		"TaskState_RUNNING": 1,
-		"TaskState_STOPPED": 2,
-	}
-)
-
-func (x TaskState) Enum() *TaskState {
-	p := new(TaskState)
-	*p = x
-	return p
-}
-
-func (x TaskState) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (TaskState) Descriptor() protoreflect.EnumDescriptor {
-	return file_sodor_sodor_proto_enumTypes[0].Descriptor()
-}
-
-func (TaskState) Type() protoreflect.EnumType {
-	return &file_sodor_sodor_proto_enumTypes[0]
-}
-
-func (x TaskState) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use TaskState.Descriptor instead.
-func (TaskState) EnumDescriptor() ([]byte, []int) {
-	return file_sodor_sodor_proto_rawDescGZIP(), []int{0}
-}
-
 type TaskType int32
 
 const (
@@ -100,11 +51,11 @@ func (x TaskType) String() string {
 }
 
 func (TaskType) Descriptor() protoreflect.EnumDescriptor {
-	return file_sodor_sodor_proto_enumTypes[1].Descriptor()
+	return file_sodor_sodor_proto_enumTypes[0].Descriptor()
 }
 
 func (TaskType) Type() protoreflect.EnumType {
-	return &file_sodor_sodor_proto_enumTypes[1]
+	return &file_sodor_sodor_proto_enumTypes[0]
 }
 
 func (x TaskType) Number() protoreflect.EnumNumber {
@@ -113,7 +64,7 @@ func (x TaskType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use TaskType.Descriptor instead.
 func (TaskType) EnumDescriptor() ([]byte, []int) {
-	return file_sodor_sodor_proto_rawDescGZIP(), []int{1}
+	return file_sodor_sodor_proto_rawDescGZIP(), []int{0}
 }
 
 type ScheduleMode int32
@@ -149,11 +100,11 @@ func (x ScheduleMode) String() string {
 }
 
 func (ScheduleMode) Descriptor() protoreflect.EnumDescriptor {
-	return file_sodor_sodor_proto_enumTypes[2].Descriptor()
+	return file_sodor_sodor_proto_enumTypes[1].Descriptor()
 }
 
 func (ScheduleMode) Type() protoreflect.EnumType {
-	return &file_sodor_sodor_proto_enumTypes[2]
+	return &file_sodor_sodor_proto_enumTypes[1]
 }
 
 func (x ScheduleMode) Number() protoreflect.EnumNumber {
@@ -162,7 +113,7 @@ func (x ScheduleMode) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use ScheduleMode.Descriptor instead.
 func (ScheduleMode) EnumDescriptor() ([]byte, []int) {
-	return file_sodor_sodor_proto_rawDescGZIP(), []int{2}
+	return file_sodor_sodor_proto_rawDescGZIP(), []int{1}
 }
 
 type HostType int32
@@ -195,11 +146,11 @@ func (x HostType) String() string {
 }
 
 func (HostType) Descriptor() protoreflect.EnumDescriptor {
-	return file_sodor_sodor_proto_enumTypes[3].Descriptor()
+	return file_sodor_sodor_proto_enumTypes[2].Descriptor()
 }
 
 func (HostType) Type() protoreflect.EnumType {
-	return &file_sodor_sodor_proto_enumTypes[3]
+	return &file_sodor_sodor_proto_enumTypes[2]
 }
 
 func (x HostType) Number() protoreflect.EnumNumber {
@@ -208,7 +159,7 @@ func (x HostType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use HostType.Descriptor instead.
 func (HostType) EnumDescriptor() ([]byte, []int) {
-	return file_sodor_sodor_proto_rawDescGZIP(), []int{3}
+	return file_sodor_sodor_proto_rawDescGZIP(), []int{2}
 }
 
 // thomas
@@ -245,11 +196,11 @@ func (x ThomasType) String() string {
 }
 
 func (ThomasType) Descriptor() protoreflect.EnumDescriptor {
-	return file_sodor_sodor_proto_enumTypes[4].Descriptor()
+	return file_sodor_sodor_proto_enumTypes[3].Descriptor()
 }
 
 func (ThomasType) Type() protoreflect.EnumType {
-	return &file_sodor_sodor_proto_enumTypes[4]
+	return &file_sodor_sodor_proto_enumTypes[3]
 }
 
 func (x ThomasType) Number() protoreflect.EnumNumber {
@@ -258,7 +209,7 @@ func (x ThomasType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use ThomasType.Descriptor instead.
 func (ThomasType) EnumDescriptor() ([]byte, []int) {
-	return file_sodor_sodor_proto_rawDescGZIP(), []int{4}
+	return file_sodor_sodor_proto_rawDescGZIP(), []int{3}
 }
 
 type AlertPluginParamType int32
@@ -291,11 +242,11 @@ func (x AlertPluginParamType) String() string {
 }
 
 func (AlertPluginParamType) Descriptor() protoreflect.EnumDescriptor {
-	return file_sodor_sodor_proto_enumTypes[5].Descriptor()
+	return file_sodor_sodor_proto_enumTypes[4].Descriptor()
 }
 
 func (AlertPluginParamType) Type() protoreflect.EnumType {
-	return &file_sodor_sodor_proto_enumTypes[5]
+	return &file_sodor_sodor_proto_enumTypes[4]
 }
 
 func (x AlertPluginParamType) Number() protoreflect.EnumNumber {
@@ -304,7 +255,7 @@ func (x AlertPluginParamType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use AlertPluginParamType.Descriptor instead.
 func (AlertPluginParamType) EnumDescriptor() ([]byte, []int) {
-	return file_sodor_sodor_proto_rawDescGZIP(), []int{5}
+	return file_sodor_sodor_proto_rawDescGZIP(), []int{4}
 }
 
 type JobReply struct {
@@ -2271,34 +2222,29 @@ var file_sodor_sodor_proto_rawDesc = []byte{
 	0x75, 0x67, 0x69, 0x6e, 0x5f, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x06, 0x20, 0x01, 0x28, 0x0b,
 	0x32, 0x17, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62,
 	0x75, 0x66, 0x2e, 0x53, 0x74, 0x72, 0x75, 0x63, 0x74, 0x52, 0x0b, 0x70, 0x6c, 0x75, 0x67, 0x69,
-	0x6e, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x2a, 0x4d, 0x0a, 0x09, 0x54, 0x61, 0x73, 0x6b, 0x53, 0x74,
-	0x61, 0x74, 0x65, 0x12, 0x12, 0x0a, 0x0e, 0x54, 0x61, 0x73, 0x6b, 0x53, 0x74, 0x61, 0x74, 0x65,
-	0x5f, 0x49, 0x4e, 0x49, 0x54, 0x10, 0x00, 0x12, 0x15, 0x0a, 0x11, 0x54, 0x61, 0x73, 0x6b, 0x53,
-	0x74, 0x61, 0x74, 0x65, 0x5f, 0x52, 0x55, 0x4e, 0x4e, 0x49, 0x4e, 0x47, 0x10, 0x01, 0x12, 0x15,
-	0x0a, 0x11, 0x54, 0x61, 0x73, 0x6b, 0x53, 0x74, 0x61, 0x74, 0x65, 0x5f, 0x53, 0x54, 0x4f, 0x50,
-	0x50, 0x45, 0x44, 0x10, 0x02, 0x2a, 0x31, 0x0a, 0x08, 0x54, 0x61, 0x73, 0x6b, 0x54, 0x79, 0x70,
-	0x65, 0x12, 0x11, 0x0a, 0x0d, 0x54, 0x61, 0x73, 0x6b, 0x54, 0x79, 0x70, 0x65, 0x5f, 0x4e, 0x75,
-	0x6c, 0x6c, 0x10, 0x00, 0x12, 0x12, 0x0a, 0x0e, 0x54, 0x61, 0x73, 0x6b, 0x54, 0x79, 0x70, 0x65,
-	0x5f, 0x53, 0x68, 0x65, 0x6c, 0x6c, 0x10, 0x01, 0x2a, 0x56, 0x0a, 0x0c, 0x53, 0x63, 0x68, 0x65,
-	0x64, 0x75, 0x6c, 0x65, 0x4d, 0x6f, 0x64, 0x65, 0x12, 0x15, 0x0a, 0x11, 0x53, 0x63, 0x68, 0x65,
-	0x64, 0x75, 0x6c, 0x65, 0x4d, 0x6f, 0x64, 0x65, 0x5f, 0x4e, 0x75, 0x6c, 0x6c, 0x10, 0x00, 0x12,
-	0x15, 0x0a, 0x11, 0x53, 0x63, 0x68, 0x65, 0x64, 0x75, 0x6c, 0x65, 0x4d, 0x6f, 0x64, 0x65, 0x5f,
-	0x4e, 0x6f, 0x6e, 0x65, 0x10, 0x01, 0x12, 0x18, 0x0a, 0x14, 0x53, 0x63, 0x68, 0x65, 0x64, 0x75,
-	0x6c, 0x65, 0x4d, 0x6f, 0x64, 0x65, 0x5f, 0x43, 0x72, 0x6f, 0x6e, 0x74, 0x61, 0x62, 0x10, 0x02,
-	0x2a, 0x2e, 0x0a, 0x08, 0x48, 0x6f, 0x73, 0x74, 0x54, 0x79, 0x70, 0x65, 0x12, 0x11, 0x0a, 0x0d,
-	0x48, 0x6f, 0x73, 0x74, 0x54, 0x79, 0x70, 0x65, 0x5f, 0x4e, 0x75, 0x6c, 0x6c, 0x10, 0x00, 0x12,
-	0x0f, 0x0a, 0x0b, 0x48, 0x6f, 0x73, 0x74, 0x54, 0x79, 0x70, 0x65, 0x5f, 0x49, 0x50, 0x10, 0x01,
-	0x2a, 0x44, 0x0a, 0x0a, 0x54, 0x68, 0x6f, 0x6d, 0x61, 0x73, 0x54, 0x79, 0x70, 0x65, 0x12, 0x0f,
-	0x0a, 0x0b, 0x54, 0x68, 0x6f, 0x6d, 0x61, 0x73, 0x5f, 0x4e, 0x75, 0x6c, 0x6c, 0x10, 0x00, 0x12,
-	0x11, 0x0a, 0x0d, 0x54, 0x68, 0x6f, 0x6d, 0x61, 0x73, 0x5f, 0x53, 0x74, 0x61, 0x74, 0x69, 0x63,
-	0x10, 0x01, 0x12, 0x12, 0x0a, 0x0e, 0x54, 0x68, 0x6f, 0x6d, 0x61, 0x73, 0x5f, 0x44, 0x79, 0x6e,
-	0x61, 0x6d, 0x69, 0x63, 0x10, 0x02, 0x2a, 0x39, 0x0a, 0x14, 0x41, 0x6c, 0x65, 0x72, 0x74, 0x50,
-	0x6c, 0x75, 0x67, 0x69, 0x6e, 0x50, 0x61, 0x72, 0x61, 0x6d, 0x54, 0x79, 0x70, 0x65, 0x12, 0x0f,
-	0x0a, 0x0b, 0x41, 0x50, 0x50, 0x54, 0x5f, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x10, 0x00, 0x12,
-	0x10, 0x0a, 0x0c, 0x41, 0x50, 0x50, 0x54, 0x5f, 0x49, 0x6e, 0x74, 0x65, 0x67, 0x65, 0x72, 0x10,
-	0x01, 0x42, 0x20, 0x5a, 0x1e, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f,
-	0x42, 0x61, 0x62, 0x79, 0x53, 0x69, 0x64, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x73, 0x6f,
-	0x64, 0x6f, 0x72, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x6e, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x2a, 0x31, 0x0a, 0x08, 0x54, 0x61, 0x73, 0x6b, 0x54, 0x79,
+	0x70, 0x65, 0x12, 0x11, 0x0a, 0x0d, 0x54, 0x61, 0x73, 0x6b, 0x54, 0x79, 0x70, 0x65, 0x5f, 0x4e,
+	0x75, 0x6c, 0x6c, 0x10, 0x00, 0x12, 0x12, 0x0a, 0x0e, 0x54, 0x61, 0x73, 0x6b, 0x54, 0x79, 0x70,
+	0x65, 0x5f, 0x53, 0x68, 0x65, 0x6c, 0x6c, 0x10, 0x01, 0x2a, 0x56, 0x0a, 0x0c, 0x53, 0x63, 0x68,
+	0x65, 0x64, 0x75, 0x6c, 0x65, 0x4d, 0x6f, 0x64, 0x65, 0x12, 0x15, 0x0a, 0x11, 0x53, 0x63, 0x68,
+	0x65, 0x64, 0x75, 0x6c, 0x65, 0x4d, 0x6f, 0x64, 0x65, 0x5f, 0x4e, 0x75, 0x6c, 0x6c, 0x10, 0x00,
+	0x12, 0x15, 0x0a, 0x11, 0x53, 0x63, 0x68, 0x65, 0x64, 0x75, 0x6c, 0x65, 0x4d, 0x6f, 0x64, 0x65,
+	0x5f, 0x4e, 0x6f, 0x6e, 0x65, 0x10, 0x01, 0x12, 0x18, 0x0a, 0x14, 0x53, 0x63, 0x68, 0x65, 0x64,
+	0x75, 0x6c, 0x65, 0x4d, 0x6f, 0x64, 0x65, 0x5f, 0x43, 0x72, 0x6f, 0x6e, 0x74, 0x61, 0x62, 0x10,
+	0x02, 0x2a, 0x2e, 0x0a, 0x08, 0x48, 0x6f, 0x73, 0x74, 0x54, 0x79, 0x70, 0x65, 0x12, 0x11, 0x0a,
+	0x0d, 0x48, 0x6f, 0x73, 0x74, 0x54, 0x79, 0x70, 0x65, 0x5f, 0x4e, 0x75, 0x6c, 0x6c, 0x10, 0x00,
+	0x12, 0x0f, 0x0a, 0x0b, 0x48, 0x6f, 0x73, 0x74, 0x54, 0x79, 0x70, 0x65, 0x5f, 0x49, 0x50, 0x10,
+	0x01, 0x2a, 0x44, 0x0a, 0x0a, 0x54, 0x68, 0x6f, 0x6d, 0x61, 0x73, 0x54, 0x79, 0x70, 0x65, 0x12,
+	0x0f, 0x0a, 0x0b, 0x54, 0x68, 0x6f, 0x6d, 0x61, 0x73, 0x5f, 0x4e, 0x75, 0x6c, 0x6c, 0x10, 0x00,
+	0x12, 0x11, 0x0a, 0x0d, 0x54, 0x68, 0x6f, 0x6d, 0x61, 0x73, 0x5f, 0x53, 0x74, 0x61, 0x74, 0x69,
+	0x63, 0x10, 0x01, 0x12, 0x12, 0x0a, 0x0e, 0x54, 0x68, 0x6f, 0x6d, 0x61, 0x73, 0x5f, 0x44, 0x79,
+	0x6e, 0x61, 0x6d, 0x69, 0x63, 0x10, 0x02, 0x2a, 0x39, 0x0a, 0x14, 0x41, 0x6c, 0x65, 0x72, 0x74,
+	0x50, 0x6c, 0x75, 0x67, 0x69, 0x6e, 0x50, 0x61, 0x72, 0x61, 0x6d, 0x54, 0x79, 0x70, 0x65, 0x12,
+	0x0f, 0x0a, 0x0b, 0x41, 0x50, 0x50, 0x54, 0x5f, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x10, 0x00,
+	0x12, 0x10, 0x0a, 0x0c, 0x41, 0x50, 0x50, 0x54, 0x5f, 0x49, 0x6e, 0x74, 0x65, 0x67, 0x65, 0x72,
+	0x10, 0x01, 0x42, 0x20, 0x5a, 0x1e, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d,
+	0x2f, 0x42, 0x61, 0x62, 0x79, 0x53, 0x69, 0x64, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x73,
+	0x6f, 0x64, 0x6f, 0x72, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -2313,67 +2259,66 @@ func file_sodor_sodor_proto_rawDescGZIP() []byte {
 	return file_sodor_sodor_proto_rawDescData
 }
 
-var file_sodor_sodor_proto_enumTypes = make([]protoimpl.EnumInfo, 6)
+var file_sodor_sodor_proto_enumTypes = make([]protoimpl.EnumInfo, 5)
 var file_sodor_sodor_proto_msgTypes = make([]protoimpl.MessageInfo, 25)
 var file_sodor_sodor_proto_goTypes = []interface{}{
-	(TaskState)(0),            // 0: TaskState
-	(TaskType)(0),             // 1: TaskType
-	(ScheduleMode)(0),         // 2: ScheduleMode
-	(HostType)(0),             // 3: HostType
-	(ThomasType)(0),           // 4: ThomasType
-	(AlertPluginParamType)(0), // 5: AlertPluginParamType
-	(*JobReply)(nil),          // 6: JobReply
-	(*ThomasReply)(nil),       // 7: ThomasReply
-	(*FatCtrlReply)(nil),      // 8: FatCtrlReply
-	(*EmptyResponse)(nil),     // 9: EmptyResponse
-	(*RoutineSpec)(nil),       // 10: RoutineSpec
-	(*Host)(nil),              // 11: Host
-	(*Task)(nil),              // 12: Task
-	(*Job)(nil),               // 13: Job
-	(*Jobs)(nil),              // 14: Jobs
-	(*TaskRelation)(nil),      // 15: TaskRelation
-	(*JobInstance)(nil),       // 16: JobInstance
-	(*JobInstances)(nil),      // 17: JobInstances
-	(*TaskInstance)(nil),      // 18: TaskInstance
-	(*TaskInstances)(nil),     // 19: TaskInstances
-	(*JobTaskInstances)(nil),  // 20: JobTaskInstances
-	(*FatCtrlInfo)(nil),       // 21: FatCtrlInfo
-	(*ThomasInfos)(nil),       // 22: ThomasInfos
-	(*ThomasInfo)(nil),        // 23: ThomasInfo
-	(*ThomasInstances)(nil),   // 24: ThomasInstances
-	(*ThomasInstance)(nil),    // 25: ThomasInstance
-	(*ThomasMetrics)(nil),     // 26: ThomasMetrics
-	(*AlertGroup)(nil),        // 27: AlertGroup
-	(*AlertPluginParams)(nil), // 28: AlertPluginParams
-	(*AlertPlugin)(nil),       // 29: AlertPlugin
-	(*AlertHistory)(nil),      // 30: AlertHistory
-	(*structpb.Struct)(nil),   // 31: google.protobuf.Struct
+	(TaskType)(0),             // 0: TaskType
+	(ScheduleMode)(0),         // 1: ScheduleMode
+	(HostType)(0),             // 2: HostType
+	(ThomasType)(0),           // 3: ThomasType
+	(AlertPluginParamType)(0), // 4: AlertPluginParamType
+	(*JobReply)(nil),          // 5: JobReply
+	(*ThomasReply)(nil),       // 6: ThomasReply
+	(*FatCtrlReply)(nil),      // 7: FatCtrlReply
+	(*EmptyResponse)(nil),     // 8: EmptyResponse
+	(*RoutineSpec)(nil),       // 9: RoutineSpec
+	(*Host)(nil),              // 10: Host
+	(*Task)(nil),              // 11: Task
+	(*Job)(nil),               // 12: Job
+	(*Jobs)(nil),              // 13: Jobs
+	(*TaskRelation)(nil),      // 14: TaskRelation
+	(*JobInstance)(nil),       // 15: JobInstance
+	(*JobInstances)(nil),      // 16: JobInstances
+	(*TaskInstance)(nil),      // 17: TaskInstance
+	(*TaskInstances)(nil),     // 18: TaskInstances
+	(*JobTaskInstances)(nil),  // 19: JobTaskInstances
+	(*FatCtrlInfo)(nil),       // 20: FatCtrlInfo
+	(*ThomasInfos)(nil),       // 21: ThomasInfos
+	(*ThomasInfo)(nil),        // 22: ThomasInfo
+	(*ThomasInstances)(nil),   // 23: ThomasInstances
+	(*ThomasInstance)(nil),    // 24: ThomasInstance
+	(*ThomasMetrics)(nil),     // 25: ThomasMetrics
+	(*AlertGroup)(nil),        // 26: AlertGroup
+	(*AlertPluginParams)(nil), // 27: AlertPluginParams
+	(*AlertPlugin)(nil),       // 28: AlertPlugin
+	(*AlertHistory)(nil),      // 29: AlertHistory
+	(*structpb.Struct)(nil),   // 30: google.protobuf.Struct
 }
 var file_sodor_sodor_proto_depIdxs = []int32{
-	3,  // 0: Host.type:type_name -> HostType
-	11, // 1: Task.running_hosts:type_name -> Host
-	1,  // 2: Task.type:type_name -> TaskType
-	2,  // 3: Job.schedule_mode:type_name -> ScheduleMode
-	10, // 4: Job.routine_spec:type_name -> RoutineSpec
-	12, // 5: Job.tasks:type_name -> Task
-	15, // 6: Job.relations:type_name -> TaskRelation
-	13, // 7: Jobs.jobs:type_name -> Job
-	16, // 8: JobInstances.job_instances:type_name -> JobInstance
-	31, // 9: TaskInstance.output_vars:type_name -> google.protobuf.Struct
-	18, // 10: TaskInstances.task_instances:type_name -> TaskInstance
-	17, // 11: JobTaskInstances.job_instances:type_name -> JobInstances
-	19, // 12: JobTaskInstances.task_instances:type_name -> TaskInstances
-	23, // 13: ThomasInfos.thomas_infos:type_name -> ThomasInfo
-	4,  // 14: ThomasInfo.thomas_type:type_name -> ThomasType
-	31, // 15: ThomasInfo.latest_metrics:type_name -> google.protobuf.Struct
-	25, // 16: ThomasInstances.thomas_instances:type_name -> ThomasInstance
-	23, // 17: ThomasInstance.thomas:type_name -> ThomasInfo
-	26, // 18: ThomasInstance.metrics:type_name -> ThomasMetrics
-	31, // 19: ThomasMetrics.metrics:type_name -> google.protobuf.Struct
-	31, // 20: AlertGroup.plugin_params:type_name -> google.protobuf.Struct
-	5,  // 21: AlertPluginParams.type:type_name -> AlertPluginParamType
-	28, // 22: AlertPlugin.params:type_name -> AlertPluginParams
-	31, // 23: AlertHistory.plugin_value:type_name -> google.protobuf.Struct
+	2,  // 0: Host.type:type_name -> HostType
+	10, // 1: Task.running_hosts:type_name -> Host
+	0,  // 2: Task.type:type_name -> TaskType
+	1,  // 3: Job.schedule_mode:type_name -> ScheduleMode
+	9,  // 4: Job.routine_spec:type_name -> RoutineSpec
+	11, // 5: Job.tasks:type_name -> Task
+	14, // 6: Job.relations:type_name -> TaskRelation
+	12, // 7: Jobs.jobs:type_name -> Job
+	15, // 8: JobInstances.job_instances:type_name -> JobInstance
+	30, // 9: TaskInstance.output_vars:type_name -> google.protobuf.Struct
+	17, // 10: TaskInstances.task_instances:type_name -> TaskInstance
+	16, // 11: JobTaskInstances.job_instances:type_name -> JobInstances
+	18, // 12: JobTaskInstances.task_instances:type_name -> TaskInstances
+	22, // 13: ThomasInfos.thomas_infos:type_name -> ThomasInfo
+	3,  // 14: ThomasInfo.thomas_type:type_name -> ThomasType
+	30, // 15: ThomasInfo.latest_metrics:type_name -> google.protobuf.Struct
+	24, // 16: ThomasInstances.thomas_instances:type_name -> ThomasInstance
+	22, // 17: ThomasInstance.thomas:type_name -> ThomasInfo
+	25, // 18: ThomasInstance.metrics:type_name -> ThomasMetrics
+	30, // 19: ThomasMetrics.metrics:type_name -> google.protobuf.Struct
+	30, // 20: AlertGroup.plugin_params:type_name -> google.protobuf.Struct
+	4,  // 21: AlertPluginParams.type:type_name -> AlertPluginParamType
+	27, // 22: AlertPlugin.params:type_name -> AlertPluginParams
+	30, // 23: AlertHistory.plugin_value:type_name -> google.protobuf.Struct
 	24, // [24:24] is the sub-list for method output_type
 	24, // [24:24] is the sub-list for method input_type
 	24, // [24:24] is the sub-list for extension type_name
@@ -2693,7 +2638,7 @@ func file_sodor_sodor_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_sodor_sodor_proto_rawDesc,
-			NumEnums:      6,
+			NumEnums:      5,
 			NumMessages:   25,
 			NumExtensions: 0,
 			NumServices:   0,
