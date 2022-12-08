@@ -24,7 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type FatControllerClient interface {
 	// for Thomas_Dynamic
 	// Thomas Send HandShae(ThomasInfo:host/port/pid/...) To FatController
-	HandShake(ctx context.Context, in *ThomasInfo, opts ...grpc.CallOption) (*FatCtrlReply, error)
+	HandShake(ctx context.Context, in *ThomasInfo, opts ...grpc.CallOption) (*FatCtrlInfos, error)
 	UpdateTaskInstance(ctx context.Context, in *TaskInstance, opts ...grpc.CallOption) (*EmptyResponse, error)
 }
 
@@ -36,8 +36,8 @@ func NewFatControllerClient(cc grpc.ClientConnInterface) FatControllerClient {
 	return &fatControllerClient{cc}
 }
 
-func (c *fatControllerClient) HandShake(ctx context.Context, in *ThomasInfo, opts ...grpc.CallOption) (*FatCtrlReply, error) {
-	out := new(FatCtrlReply)
+func (c *fatControllerClient) HandShake(ctx context.Context, in *ThomasInfo, opts ...grpc.CallOption) (*FatCtrlInfos, error) {
+	out := new(FatCtrlInfos)
 	err := c.cc.Invoke(ctx, "/FatController/HandShake", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -60,7 +60,7 @@ func (c *fatControllerClient) UpdateTaskInstance(ctx context.Context, in *TaskIn
 type FatControllerServer interface {
 	// for Thomas_Dynamic
 	// Thomas Send HandShae(ThomasInfo:host/port/pid/...) To FatController
-	HandShake(context.Context, *ThomasInfo) (*FatCtrlReply, error)
+	HandShake(context.Context, *ThomasInfo) (*FatCtrlInfos, error)
 	UpdateTaskInstance(context.Context, *TaskInstance) (*EmptyResponse, error)
 	mustEmbedUnimplementedFatControllerServer()
 }
@@ -69,7 +69,7 @@ type FatControllerServer interface {
 type UnimplementedFatControllerServer struct {
 }
 
-func (UnimplementedFatControllerServer) HandShake(context.Context, *ThomasInfo) (*FatCtrlReply, error) {
+func (UnimplementedFatControllerServer) HandShake(context.Context, *ThomasInfo) (*FatCtrlInfos, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method HandShake not implemented")
 }
 func (UnimplementedFatControllerServer) UpdateTaskInstance(context.Context, *TaskInstance) (*EmptyResponse, error) {

@@ -24,7 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type ThomasClient interface {
 	// for Thomas_Static
 	// FatController Send HandShae(ThomasInfo:ID) To Thomas
-	HandShake(ctx context.Context, in *FatCtrlInfo, opts ...grpc.CallOption) (*ThomasReply, error)
+	HandShake(ctx context.Context, in *FatCtrlInfos, opts ...grpc.CallOption) (*ThomasInfo, error)
 	RunTask(ctx context.Context, in *RunTaskRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
 }
 
@@ -36,8 +36,8 @@ func NewThomasClient(cc grpc.ClientConnInterface) ThomasClient {
 	return &thomasClient{cc}
 }
 
-func (c *thomasClient) HandShake(ctx context.Context, in *FatCtrlInfo, opts ...grpc.CallOption) (*ThomasReply, error) {
-	out := new(ThomasReply)
+func (c *thomasClient) HandShake(ctx context.Context, in *FatCtrlInfos, opts ...grpc.CallOption) (*ThomasInfo, error) {
+	out := new(ThomasInfo)
 	err := c.cc.Invoke(ctx, "/Thomas/HandShake", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -60,7 +60,7 @@ func (c *thomasClient) RunTask(ctx context.Context, in *RunTaskRequest, opts ...
 type ThomasServer interface {
 	// for Thomas_Static
 	// FatController Send HandShae(ThomasInfo:ID) To Thomas
-	HandShake(context.Context, *FatCtrlInfo) (*ThomasReply, error)
+	HandShake(context.Context, *FatCtrlInfos) (*ThomasInfo, error)
 	RunTask(context.Context, *RunTaskRequest) (*EmptyResponse, error)
 	mustEmbedUnimplementedThomasServer()
 }
@@ -69,7 +69,7 @@ type ThomasServer interface {
 type UnimplementedThomasServer struct {
 }
 
-func (UnimplementedThomasServer) HandShake(context.Context, *FatCtrlInfo) (*ThomasReply, error) {
+func (UnimplementedThomasServer) HandShake(context.Context, *FatCtrlInfos) (*ThomasInfo, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method HandShake not implemented")
 }
 func (UnimplementedThomasServer) RunTask(context.Context, *RunTaskRequest) (*EmptyResponse, error) {
@@ -89,7 +89,7 @@ func RegisterThomasServer(s grpc.ServiceRegistrar, srv ThomasServer) {
 }
 
 func _Thomas_HandShake_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FatCtrlInfo)
+	in := new(FatCtrlInfos)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -101,7 +101,7 @@ func _Thomas_HandShake_Handler(srv interface{}, ctx context.Context, dec func(in
 		FullMethod: "/Thomas/HandShake",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ThomasServer).HandShake(ctx, req.(*FatCtrlInfo))
+		return srv.(ThomasServer).HandShake(ctx, req.(*FatCtrlInfos))
 	}
 	return interceptor(ctx, in, info, handler)
 }
