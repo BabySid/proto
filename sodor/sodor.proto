@@ -178,8 +178,12 @@ message AlertGroup {
 }
 
 enum AlertPluginParamType {
-    APPT_String = 0;
-    APPT_Integer = 1;
+  APPT_String = 0;
+  APPT_Integer = 1;
+}
+
+enum AlertPluginName {
+  APN_DingDing = 0;
 }
 
 message AlertPluginParams {

@@ -258,6 +258,49 @@ func (AlertPluginParamType) EnumDescriptor() ([]byte, []int) {
 	return file_sodor_sodor_proto_rawDescGZIP(), []int{4}
 }
 
+type AlertPluginName int32
+
+const (
+	AlertPluginName_APN_DingDing AlertPluginName = 0
+)
+
+// Enum value maps for AlertPluginName.
+var (
+	AlertPluginName_name = map[int32]string{
+		0: "APN_DingDing",
+	}
+	AlertPluginName_value = map[string]int32{
+		"APN_DingDing": 0,
+	}
+)
+
+func (x AlertPluginName) Enum() *AlertPluginName {
+	p := new(AlertPluginName)
+	*p = x
+	return p
+}
+
+func (x AlertPluginName) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (AlertPluginName) Descriptor() protoreflect.EnumDescriptor {
+	return file_sodor_sodor_proto_enumTypes[5].Descriptor()
+}
+
+func (AlertPluginName) Type() protoreflect.EnumType {
+	return &file_sodor_sodor_proto_enumTypes[5]
+}
+
+func (x AlertPluginName) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use AlertPluginName.Descriptor instead.
+func (AlertPluginName) EnumDescriptor() ([]byte, []int) {
+	return file_sodor_sodor_proto_rawDescGZIP(), []int{5}
+}
+
 type JobReply struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -2195,10 +2238,12 @@ var file_sodor_sodor_proto_rawDesc = []byte{
 	0x41, 0x6c, 0x65, 0x72, 0x74, 0x50, 0x6c, 0x75, 0x67, 0x69, 0x6e, 0x50, 0x61, 0x72, 0x61, 0x6d,
 	0x54, 0x79, 0x70, 0x65, 0x12, 0x0f, 0x0a, 0x0b, 0x41, 0x50, 0x50, 0x54, 0x5f, 0x53, 0x74, 0x72,
 	0x69, 0x6e, 0x67, 0x10, 0x00, 0x12, 0x10, 0x0a, 0x0c, 0x41, 0x50, 0x50, 0x54, 0x5f, 0x49, 0x6e,
-	0x74, 0x65, 0x67, 0x65, 0x72, 0x10, 0x01, 0x42, 0x20, 0x5a, 0x1e, 0x67, 0x69, 0x74, 0x68, 0x75,
-	0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x42, 0x61, 0x62, 0x79, 0x53, 0x69, 0x64, 0x2f, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x2f, 0x73, 0x6f, 0x64, 0x6f, 0x72, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f,
-	0x33,
+	0x74, 0x65, 0x67, 0x65, 0x72, 0x10, 0x01, 0x2a, 0x23, 0x0a, 0x0f, 0x41, 0x6c, 0x65, 0x72, 0x74,
+	0x50, 0x6c, 0x75, 0x67, 0x69, 0x6e, 0x4e, 0x61, 0x6d, 0x65, 0x12, 0x10, 0x0a, 0x0c, 0x41, 0x50,
+	0x4e, 0x5f, 0x44, 0x69, 0x6e, 0x67, 0x44, 0x69, 0x6e, 0x67, 0x10, 0x00, 0x42, 0x20, 0x5a, 0x1e,
+	0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x42, 0x61, 0x62, 0x79, 0x53,
+	0x69, 0x64, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x73, 0x6f, 0x64, 0x6f, 0x72, 0x62, 0x06,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -2213,7 +2258,7 @@ func file_sodor_sodor_proto_rawDescGZIP() []byte {
 	return file_sodor_sodor_proto_rawDescData
 }
 
-var file_sodor_sodor_proto_enumTypes = make([]protoimpl.EnumInfo, 5)
+var file_sodor_sodor_proto_enumTypes = make([]protoimpl.EnumInfo, 6)
 var file_sodor_sodor_proto_msgTypes = make([]protoimpl.MessageInfo, 24)
 var file_sodor_sodor_proto_goTypes = []interface{}{
 	(TaskType)(0),             // 0: TaskType
@@ -2221,58 +2266,59 @@ var file_sodor_sodor_proto_goTypes = []interface{}{
 	(HostType)(0),             // 2: HostType
 	(ThomasType)(0),           // 3: ThomasType
 	(AlertPluginParamType)(0), // 4: AlertPluginParamType
-	(*JobReply)(nil),          // 5: JobReply
-	(*EmptyResponse)(nil),     // 6: EmptyResponse
-	(*RoutineSpec)(nil),       // 7: RoutineSpec
-	(*Host)(nil),              // 8: Host
-	(*Task)(nil),              // 9: Task
-	(*Job)(nil),               // 10: Job
-	(*Jobs)(nil),              // 11: Jobs
-	(*TaskRelation)(nil),      // 12: TaskRelation
-	(*JobInstance)(nil),       // 13: JobInstance
-	(*JobInstances)(nil),      // 14: JobInstances
-	(*TaskInstance)(nil),      // 15: TaskInstance
-	(*TaskInstances)(nil),     // 16: TaskInstances
-	(*JobTaskInstances)(nil),  // 17: JobTaskInstances
-	(*FatCtrlInfo)(nil),       // 18: FatCtrlInfo
-	(*FatCtrlInfos)(nil),      // 19: FatCtrlInfos
-	(*ThomasInfos)(nil),       // 20: ThomasInfos
-	(*ThomasInfo)(nil),        // 21: ThomasInfo
-	(*ThomasInstances)(nil),   // 22: ThomasInstances
-	(*ThomasInstance)(nil),    // 23: ThomasInstance
-	(*ThomasMetrics)(nil),     // 24: ThomasMetrics
-	(*AlertGroup)(nil),        // 25: AlertGroup
-	(*AlertPluginParams)(nil), // 26: AlertPluginParams
-	(*AlertPlugin)(nil),       // 27: AlertPlugin
-	(*AlertHistory)(nil),      // 28: AlertHistory
-	(*structpb.Struct)(nil),   // 29: google.protobuf.Struct
+	(AlertPluginName)(0),      // 5: AlertPluginName
+	(*JobReply)(nil),          // 6: JobReply
+	(*EmptyResponse)(nil),     // 7: EmptyResponse
+	(*RoutineSpec)(nil),       // 8: RoutineSpec
+	(*Host)(nil),              // 9: Host
+	(*Task)(nil),              // 10: Task
+	(*Job)(nil),               // 11: Job
+	(*Jobs)(nil),              // 12: Jobs
+	(*TaskRelation)(nil),      // 13: TaskRelation
+	(*JobInstance)(nil),       // 14: JobInstance
+	(*JobInstances)(nil),      // 15: JobInstances
+	(*TaskInstance)(nil),      // 16: TaskInstance
+	(*TaskInstances)(nil),     // 17: TaskInstances
+	(*JobTaskInstances)(nil),  // 18: JobTaskInstances
+	(*FatCtrlInfo)(nil),       // 19: FatCtrlInfo
+	(*FatCtrlInfos)(nil),      // 20: FatCtrlInfos
+	(*ThomasInfos)(nil),       // 21: ThomasInfos
+	(*ThomasInfo)(nil),        // 22: ThomasInfo
+	(*ThomasInstances)(nil),   // 23: ThomasInstances
+	(*ThomasInstance)(nil),    // 24: ThomasInstance
+	(*ThomasMetrics)(nil),     // 25: ThomasMetrics
+	(*AlertGroup)(nil),        // 26: AlertGroup
+	(*AlertPluginParams)(nil), // 27: AlertPluginParams
+	(*AlertPlugin)(nil),       // 28: AlertPlugin
+	(*AlertHistory)(nil),      // 29: AlertHistory
+	(*structpb.Struct)(nil),   // 30: google.protobuf.Struct
 }
 var file_sodor_sodor_proto_depIdxs = []int32{
 	2,  // 0: Host.type:type_name -> HostType
-	8,  // 1: Task.running_hosts:type_name -> Host
+	9,  // 1: Task.running_hosts:type_name -> Host
 	0,  // 2: Task.type:type_name -> TaskType
 	1,  // 3: Job.schedule_mode:type_name -> ScheduleMode
-	7,  // 4: Job.routine_spec:type_name -> RoutineSpec
-	9,  // 5: Job.tasks:type_name -> Task
-	12, // 6: Job.relations:type_name -> TaskRelation
-	10, // 7: Jobs.jobs:type_name -> Job
-	13, // 8: JobInstances.job_instances:type_name -> JobInstance
-	29, // 9: TaskInstance.output_vars:type_name -> google.protobuf.Struct
-	15, // 10: TaskInstances.task_instances:type_name -> TaskInstance
-	14, // 11: JobTaskInstances.job_instances:type_name -> JobInstances
-	16, // 12: JobTaskInstances.task_instances:type_name -> TaskInstances
-	18, // 13: FatCtrlInfos.fat_ctrl_infos:type_name -> FatCtrlInfo
-	21, // 14: ThomasInfos.thomas_infos:type_name -> ThomasInfo
+	8,  // 4: Job.routine_spec:type_name -> RoutineSpec
+	10, // 5: Job.tasks:type_name -> Task
+	13, // 6: Job.relations:type_name -> TaskRelation
+	11, // 7: Jobs.jobs:type_name -> Job
+	14, // 8: JobInstances.job_instances:type_name -> JobInstance
+	30, // 9: TaskInstance.output_vars:type_name -> google.protobuf.Struct
+	16, // 10: TaskInstances.task_instances:type_name -> TaskInstance
+	15, // 11: JobTaskInstances.job_instances:type_name -> JobInstances
+	17, // 12: JobTaskInstances.task_instances:type_name -> TaskInstances
+	19, // 13: FatCtrlInfos.fat_ctrl_infos:type_name -> FatCtrlInfo
+	22, // 14: ThomasInfos.thomas_infos:type_name -> ThomasInfo
 	3,  // 15: ThomasInfo.thomas_type:type_name -> ThomasType
-	29, // 16: ThomasInfo.latest_metrics:type_name -> google.protobuf.Struct
-	23, // 17: ThomasInstances.thomas_instances:type_name -> ThomasInstance
-	21, // 18: ThomasInstance.thomas:type_name -> ThomasInfo
-	24, // 19: ThomasInstance.metrics:type_name -> ThomasMetrics
-	29, // 20: ThomasMetrics.metrics:type_name -> google.protobuf.Struct
-	29, // 21: AlertGroup.plugin_params:type_name -> google.protobuf.Struct
+	30, // 16: ThomasInfo.latest_metrics:type_name -> google.protobuf.Struct
+	24, // 17: ThomasInstances.thomas_instances:type_name -> ThomasInstance
+	22, // 18: ThomasInstance.thomas:type_name -> ThomasInfo
+	25, // 19: ThomasInstance.metrics:type_name -> ThomasMetrics
+	30, // 20: ThomasMetrics.metrics:type_name -> google.protobuf.Struct
+	30, // 21: AlertGroup.plugin_params:type_name -> google.protobuf.Struct
 	4,  // 22: AlertPluginParams.type:type_name -> AlertPluginParamType
-	26, // 23: AlertPlugin.params:type_name -> AlertPluginParams
-	29, // 24: AlertHistory.plugin_value:type_name -> google.protobuf.Struct
+	27, // 23: AlertPlugin.params:type_name -> AlertPluginParams
+	30, // 24: AlertHistory.plugin_value:type_name -> google.protobuf.Struct
 	25, // [25:25] is the sub-list for method output_type
 	25, // [25:25] is the sub-list for method input_type
 	25, // [25:25] is the sub-list for extension type_name
@@ -2580,7 +2626,7 @@ func file_sodor_sodor_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_sodor_sodor_proto_rawDesc,
-			NumEnums:      5,
+			NumEnums:      6,
 			NumMessages:   24,
 			NumExtensions: 0,
 			NumServices:   0,
