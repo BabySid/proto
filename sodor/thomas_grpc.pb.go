@@ -24,7 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type ThomasClient interface {
 	// for Thomas_Static
 	// FatController Send HandShae(ThomasInfo:ID) To Thomas
-	HandShake(ctx context.Context, in *FatCtrlInfo, opts ...grpc.CallOption) (*FatCtrlReply, error)
+	HandShake(ctx context.Context, in *FatCtrlInfo, opts ...grpc.CallOption) (*ThomasReply, error)
 	RunTask(ctx context.Context, in *RunTaskRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
 }
 
@@ -36,8 +36,8 @@ func NewThomasClient(cc grpc.ClientConnInterface) ThomasClient {
 	return &thomasClient{cc}
 }
 
-func (c *thomasClient) HandShake(ctx context.Context, in *FatCtrlInfo, opts ...grpc.CallOption) (*FatCtrlReply, error) {
-	out := new(FatCtrlReply)
+func (c *thomasClient) HandShake(ctx context.Context, in *FatCtrlInfo, opts ...grpc.CallOption) (*ThomasReply, error) {
+	out := new(ThomasReply)
 	err := c.cc.Invoke(ctx, "/Thomas/HandShake", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -60,7 +60,7 @@ func (c *thomasClient) RunTask(ctx context.Context, in *RunTaskRequest, opts ...
 type ThomasServer interface {
 	// for Thomas_Static
 	// FatController Send HandShae(ThomasInfo:ID) To Thomas
-	HandShake(context.Context, *FatCtrlInfo) (*FatCtrlReply, error)
+	HandShake(context.Context, *FatCtrlInfo) (*ThomasReply, error)
 	RunTask(context.Context, *RunTaskRequest) (*EmptyResponse, error)
 	mustEmbedUnimplementedThomasServer()
 }
@@ -69,7 +69,7 @@ type ThomasServer interface {
 type UnimplementedThomasServer struct {
 }
 
-func (UnimplementedThomasServer) HandShake(context.Context, *FatCtrlInfo) (*FatCtrlReply, error) {
+func (UnimplementedThomasServer) HandShake(context.Context, *FatCtrlInfo) (*ThomasReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method HandShake not implemented")
 }
 func (UnimplementedThomasServer) RunTask(context.Context, *RunTaskRequest) (*EmptyResponse, error) {
