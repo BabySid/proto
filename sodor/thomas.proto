@@ -7,8 +7,13 @@ import "sodor/sodor.proto";
 service Thomas {
   // for Thomas_Static
   // FatController Send HandShae(ThomasInfo:ID) To Thomas
-  rpc HandShake (FatCtrlInfos) returns (ThomasInfo) {}
+  rpc HandShake (HandShakeWithThomasRequest) returns (ThomasInfo) {}
   rpc RunTask (RunTaskRequest) returns (EmptyResponse) {}
+}
+
+message HandShakeWithThomasRequest {
+    ThomasInfo thomas = 1;
+    FatCtrlInfos fat_ctrls = 2;
 }
 
 message RunTaskRequest {

@@ -6,7 +6,7 @@ import "sodor/sodor.proto";
 
 service FatController {
   // for Thomas_Dynamic
-  // Thomas Send HandShae(ThomasInfo:host/port/pid/...) To FatController
+  // Thomas Send HandShae(ThomasInfo:id/host/port/pid/...) To FatController
   rpc HandShake (ThomasInfo) returns (FatCtrlInfos) {}
   rpc UpdateTaskInstance(TaskInstance) returns (EmptyResponse) {}
 }
