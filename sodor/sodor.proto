@@ -8,6 +8,14 @@ message JobReply {
   int32 id = 1;
 }
 
+message ThomasReply {
+  int32 id = 1;
+}
+
+message AlertGroupReply {
+  int32 id = 1;
+}
+
 message EmptyResponse {}
 
 enum TaskType {
