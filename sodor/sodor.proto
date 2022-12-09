@@ -176,6 +176,10 @@ message ThomasMetrics {
 }
 
 // alert
+message AlertGroups {
+  repeated AlertGroup alert_groups = 1;
+}
+
 message AlertGroup {
   int32  id = 1;
   int32 create_at = 2;
@@ -200,12 +204,20 @@ message AlertPluginParams {
   string desc_en = 3;
 }
 
+message AlertPlugins {
+  repeated AlertPlugin alert_plugins = 1;
+}
+
 message AlertPlugin {
   string name = 1;
   AlertPluginParams params = 2;
 }
 
-message AlertHistory {
+message AlertInstances {
+  repeated AlertInstance alert_instances = 1;
+}
+
+message AlertInstance {
   int32 id = 1;
   int32 create_at = 2;
   int32 update_at = 3;
