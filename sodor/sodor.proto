@@ -213,11 +213,11 @@ message AlertPlugin {
   AlertPluginParams params = 2;
 }
 
-message AlertInstances {
-  repeated AlertInstance alert_instances = 1;
+message AlertGroupInstances {
+  repeated AlertGroupInstance alert_group_instances = 1;
 }
 
-message AlertInstance {
+message AlertGroupInstance {
   int32 id = 1;
   int32 create_at = 2;
   int32 update_at = 3;
