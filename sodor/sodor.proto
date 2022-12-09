@@ -198,7 +198,7 @@ enum AlertPluginName {
   APN_DingDing = 0;
 }
 
-message AlertPluginParams {
+message AlertPluginParam {
   string name = 1;
   AlertPluginParamType type = 2;
   string desc_en = 3;
@@ -210,7 +210,7 @@ message AlertPlugins {
 
 message AlertPlugin {
   string name = 1;
-  AlertPluginParams params = 2;
+  repeated AlertPluginParam params = 2;
 }
 
 message AlertGroupInstances {
