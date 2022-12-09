@@ -63,6 +63,7 @@ message Job {
   RoutineSpec routine_spec = 6;
   repeated Task tasks = 7;
   repeated TaskRelation relations = 8;
+  int32 alert_group_id = 9;
 }
 
 message Jobs {
