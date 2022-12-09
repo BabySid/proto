@@ -23,7 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type FatControllerClient interface {
 	// for Thomas_Dynamic
-	// Thomas Send HandShae(ThomasInfo:host/port/pid/...) To FatController
+	// Thomas Send HandShae(ThomasInfo:id/host/port/pid/...) To FatController
 	HandShake(ctx context.Context, in *ThomasInfo, opts ...grpc.CallOption) (*FatCtrlInfos, error)
 	UpdateTaskInstance(ctx context.Context, in *TaskInstance, opts ...grpc.CallOption) (*EmptyResponse, error)
 }
@@ -59,7 +59,7 @@ func (c *fatControllerClient) UpdateTaskInstance(ctx context.Context, in *TaskIn
 // for forward compatibility
 type FatControllerServer interface {
 	// for Thomas_Dynamic
-	// Thomas Send HandShae(ThomasInfo:host/port/pid/...) To FatController
+	// Thomas Send HandShae(ThomasInfo:id/host/port/pid/...) To FatController
 	HandShake(context.Context, *ThomasInfo) (*FatCtrlInfos, error)
 	UpdateTaskInstance(context.Context, *TaskInstance) (*EmptyResponse, error)
 	mustEmbedUnimplementedFatControllerServer()
