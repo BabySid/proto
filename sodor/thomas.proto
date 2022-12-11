@@ -17,9 +17,6 @@ message HandShakeWithThomasRequest {
 }
 
 message RunTaskRequest {
-  int32 task_instance_id = 1;
-  int32 job_id = 2;
-  int32 task_id = 3;
-  int32 job_instance_id = 4;
-  Task task = 5;
+  TaskInstance task_instance = 1;
+  Task task = 2;
 }

@@ -51,7 +51,7 @@ message Task {
   string name = 5;
   repeated Host running_hosts = 6;
   TaskType type = 7;
-  string script = 8;
+  string content = 8;
 }
 
 message Job {
@@ -98,13 +98,14 @@ message TaskInstance {
   int32 job_id = 4;
   int32 task_id = 5;
   int32 job_instance_id = 6;
-  int32 start_ts = 7;
-  int32 stop_ts = 8;
-  string host = 9;
-  int32 pid = 10;
-  int32 exit_code = 11;
-  string exit_msg = 12;
-  google.protobuf.Struct output_vars = 13;
+  string parsed_content = 7;
+  int32 start_ts = 8;
+  int32 stop_ts = 9;
+  string host = 10;
+  int32 pid = 11;
+  int32 exit_code = 12;
+  string exit_msg = 13;
+  google.protobuf.Struct output_vars = 14;
 }
 
 message TaskInstances {
