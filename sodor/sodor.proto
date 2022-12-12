@@ -209,8 +209,9 @@ message AlertPluginInstance {
   int32 create_at = 2;
   int32 update_at = 3;
   string name = 4;
+  string plugin_name = 5;
   oneof plugin {
-    AlertPluginDingDing dingding = 5;
+    AlertPluginDingDing dingding = 6;
   }
 }
 
