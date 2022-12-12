@@ -16,7 +16,7 @@ message AlertGroupReply {
   int32 id = 1;
 }
 
-message AlertGroupPluginReply {
+message AlertPluginReply {
   int32 id = 1;
 }
 
