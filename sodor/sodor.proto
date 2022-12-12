@@ -187,45 +187,39 @@ message AlertGroup {
   int32 create_at = 2;
   int32 update_at = 3;
   string name = 4;
-  // golang: map[string]map[string]interface{}
-  google.protobuf.Struct plugin_params = 5;
-}
-
-enum AlertPluginParamType {
-  APPT_String = 0;
-  APPT_Integer = 1;
+  repeated AlertPluginInstance plugins = 5;
 }
 
 enum AlertPluginName {
   APN_DingDing = 0;
 }
 
-message AlertPluginParam {
-  string name = 1;
-  AlertPluginParamType type = 2;
-  string desc_en = 3;
+message AlertPluginDingDing {
+  string webhook = 1;
+  string sign = 2;
+  repeated string at_mobiles = 3;
 }
 
-message AlertPlugins {
-  repeated AlertPlugin alert_plugins = 1;
+message AlertPluginInstance {
+  int32  id = 1;
+  int32 create_at = 2;
+  int32 update_at = 3;
+  string name = 4;
+  oneof plugin {
+    AlertPluginDingDing dingding = 5;
+  }
 }
 
-message AlertPlugin {
-  string name = 1;
-  repeated AlertPluginParam params = 2;
+message AlertPluginInstanceHistories {
+  repeated AlertPluginInstanceHistory alert_plugin_instance_history = 1;
 }
 
-message AlertGroupInstances {
-  repeated AlertGroupInstance alert_group_instances = 1;
-}
-
-message AlertGroupInstance {
+message AlertPluginInstanceHistory {
   int32 id = 1;
   int32 create_at = 2;
   int32 update_at = 3;
   int32 instance_id = 4;
   int32 group_id = 5;
-  string plugin_name = 6;
-  google.protobuf.Struct plugin_value = 7;
-  string status_msg = 8;
+  string alert_msg = 6;
+  string status_msg = 7;
 }
