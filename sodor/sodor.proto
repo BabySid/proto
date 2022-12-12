@@ -187,7 +187,7 @@ message AlertGroup {
   int32 create_at = 2;
   int32 update_at = 3;
   string name = 4;
-  repeated AlertPluginInstance plugins = 5;
+  repeated int32 plugin_instance = 5;
 }
 
 enum AlertPluginName {
