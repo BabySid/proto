@@ -194,6 +194,10 @@ message AlertGroup {
   repeated int32 plugin_instance = 5;
 }
 
+message AlertPluginInstances {
+  repeated AlertPluginInstance alert_plugin_instances = 1;
+}
+
 enum AlertPluginName {
   APN_DingDing = 0;
 }
