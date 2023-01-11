@@ -154,15 +154,16 @@ message ThomasInfo {
   int32 update_at = 3;
   string name = 4;
   string version = 5;
-  string proto = 6;
-  string host = 7;
-  int32 port = 8;
-  int32 pid = 9;
-  int32 start_time = 10;
-  int32 heart_beat_time = 11;
-  ThomasType thomas_type = 12;
-  string status = 13;
-  google.protobuf.Struct latest_metrics = 14;
+  repeated string tags = 6;
+  string proto = 7;
+  string host = 8;
+  int32 port = 9;
+  int32 pid = 10;
+  int32 start_time = 11;
+  int32 heart_beat_time = 12;
+  ThomasType thomas_type = 13;
+  string status = 14;
+  google.protobuf.Struct latest_metrics = 15;
 }
 
 message ThomasInstances {
