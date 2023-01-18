@@ -192,7 +192,7 @@ message AlertGroup {
   int32 create_at = 2;
   int32 update_at = 3;
   string name = 4;
-  repeated AlertPluginInstance plugin_instances = 5;
+  repeated int32 plugin_instances = 5;
 }
 
 message AlertPluginInstances {
