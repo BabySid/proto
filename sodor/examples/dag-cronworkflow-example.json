@@ -1,0 +1,435 @@
+{
+    "apiVersion": "dag/v1",
+    "kind": "CronWorkflow",
+    "metadata": {
+        "name": "daily-video-report",
+        "namespace": "production",
+        "labels": {
+            "type": "scheduled-job",
+            "team": "content-analytics",
+            "frequency": "daily"
+        },
+        "annotations": {
+            "description": "Generate the previous day's video data report daily at 3 AM and send notifications",
+            "owner": "analytics@example.com"
+        }
+    },
+    "spec": {
+        "schedule": "0 3 * * *",
+        "timezone": "Asia/Shanghai",
+        "concurrencyPolicy": "Forbid",
+        "startingDeadlineSeconds": 600,
+        "successfulJobsHistoryLimit": 7,
+        "failedJobsHistoryLimit": 3,
+        "suspend": false,
+        "workflowMetadata": {
+            "labels": {
+                "triggered-by": "cron",
+                "report-date": "{{cronworkflow.scheduledTime | date('2006-01-02')}}"
+            },
+            "annotations": {
+                "cron-workflow-name": "{{cronworkflow.name}}",
+                "scheduled-time": "{{cronworkflow.scheduledTime}}"
+            }
+        },
+        "workflowSpec": {
+            "entrypoint": "report-pipeline",
+            "arguments": {
+                "parameters": [
+                    {
+                        "name": "report_date",
+                        "value": "{{cronworkflow.scheduledTime | date('2006-01-02') | dateAdd('-24h') | date('2006-01-02')}}",
+                        "description": "Report date, set to the day before the scheduled execution time"
+                    },
+                    {
+                        "name": "output_bucket",
+                        "value": "oss://video-analytics/daily-reports"
+                    },
+                    {
+                        "name": "notification_channel",
+                        "value": "analytics-team"
+                    }
+                ]
+            },
+            "globalTimeout": "2h",
+            "retryStrategy": {
+                "limit": 2,
+                "backoff": {
+                    "duration": "5m",
+                    "factor": 2,
+                    "maxDuration": "30m"
+                }
+            },
+            "failurePolicy": "fail-fast",
+            "templates": [
+                {
+                    "name": "report-pipeline",
+                    "dag": {
+                        "tasks": [
+                            {
+                                "name": "extract-video-data",
+                                "template": "data-extract-task",
+                                "arguments": {
+                                    "parameters": [
+                                        {
+                                            "name": "date",
+                                            "value": "{{workflow.parameters.report_date}}"
+                                        },
+                                        {
+                                            "name": "data_type",
+                                            "value": "video_metrics"
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "name": "extract-user-data",
+                                "template": "data-extract-task",
+                                "arguments": {
+                                    "parameters": [
+                                        {
+                                            "name": "date",
+                                            "value": "{{workflow.parameters.report_date}}"
+                                        },
+                                        {
+                                            "name": "data_type",
+                                            "value": "user_engagement"
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "name": "aggregate-data",
+                                "template": "data-aggregate-task",
+                                "dependencies": [
+                                    "extract-video-data",
+                                    "extract-user-data"
+                                ],
+                                "arguments": {
+                                    "parameters": [
+                                        {
+                                            "name": "video_data",
+                                            "value": "{{tasks.extract-video-data.outputs.parameters.data_path}}"
+                                        },
+                                        {
+                                            "name": "user_data",
+                                            "value": "{{tasks.extract-user-data.outputs.parameters.data_path}}"
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "name": "generate-report",
+                                "template": "report-gen-task",
+                                "dependencies": [
+                                    "aggregate-data"
+                                ],
+                                "arguments": {
+                                    "parameters": [
+                                        {
+                                            "name": "aggregated_data",
+                                            "value": "{{tasks.aggregate-data.outputs.parameters.output_path}}"
+                                        },
+                                        {
+                                            "name": "report_date",
+                                            "value": "{{workflow.parameters.report_date}}"
+                                        },
+                                        {
+                                            "name": "output_bucket",
+                                            "value": "{{workflow.parameters.output_bucket}}"
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "name": "send-notification",
+                                "template": "notify-task",
+                                "dependencies": [
+                                    "generate-report"
+                                ],
+                                "arguments": {
+                                    "parameters": [
+                                        {
+                                            "name": "report_url",
+                                            "value": "{{tasks.generate-report.outputs.parameters.report_url}}"
+                                        },
+                                        {
+                                            "name": "channel",
+                                            "value": "{{workflow.parameters.notification_channel}}"
+                                        },
+                                        {
+                                            "name": "report_date",
+                                            "value": "{{workflow.parameters.report_date}}"
+                                        }
+                                    ]
+                                },
+                                "continueOn": {
+                                    "failed": true
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "data-extract-task",
+                    "queue": "data-process",
+                    "timeout": "30m",
+                    "inputs": {
+                        "parameters": [
+                            {
+                                "name": "date"
+                            },
+                            {
+                                "name": "data_type"
+                            }
+                        ]
+                    },
+                    "outputs": {
+                        "parameters": [
+                            {
+                                "name": "data_path",
+                                "valueFrom": {
+                                    "path": "/output/data_path.txt"
+                                }
+                            },
+                            {
+                                "name": "record_count",
+                                "valueFrom": {
+                                    "path": "/output/record_count.txt"
+                                }
+                            }
+                        ]
+                    },
+                    "executor": {
+                        "type": "container",
+                        "config": {
+                            "image": "data-extractor:v2.1.0",
+                            "command": [
+                                "python",
+                                "extract.py"
+                            ],
+                            "args": [
+                                "--date",
+                                "{{inputs.parameters.date}}",
+                                "--type",
+                                "{{inputs.parameters.data_type}}",
+                                "--output",
+                                "/output"
+                            ],
+                            "env": [
+                                {
+                                    "name": "DB_HOST",
+                                    "valueFrom": {
+                                        "secretKeyRef": {
+                                            "name": "db-credentials",
+                                            "key": "host"
+                                        }
+                                    }
+                                },
+                                {
+                                    "name": "DB_PASSWORD",
+                                    "valueFrom": {
+                                        "secretKeyRef": {
+                                            "name": "db-credentials",
+                                            "key": "password"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "retryStrategy": {
+                        "limit": 3,
+                        "retryOn": [
+                            "timeout",
+                            "transient-error"
+                        ],
+                        "backoff": {
+                            "duration": "30s",
+                            "factor": 2,
+                            "maxDuration": "5m"
+                        }
+                    },
+                    "resources": {
+                        "cpu": "2",
+                        "memory": "4Gi"
+                    }
+                },
+                {
+                    "name": "data-aggregate-task",
+                    "queue": "data-process",
+                    "timeout": "20m",
+                    "inputs": {
+                        "parameters": [
+                            {
+                                "name": "video_data"
+                            },
+                            {
+                                "name": "user_data"
+                            }
+                        ]
+                    },
+                    "outputs": {
+                        "parameters": [
+                            {
+                                "name": "output_path",
+                                "valueFrom": {
+                                    "path": "/output/aggregated_path.txt"
+                                }
+                            }
+                        ]
+                    },
+                    "executor": {
+                        "type": "container",
+                        "config": {
+                            "image": "data-aggregator:v1.5.0",
+                            "command": [
+                                "python",
+                                "aggregate.py"
+                            ],
+                            "args": [
+                                "--video-data",
+                                "{{inputs.parameters.video_data}}",
+                                "--user-data",
+                                "{{inputs.parameters.user_data}}",
+                                "--output",
+                                "/output"
+                            ]
+                        }
+                    },
+                    "resources": {
+                        "cpu": "4",
+                        "memory": "8Gi"
+                    }
+                },
+                {
+                    "name": "report-gen-task",
+                    "queue": "data-process",
+                    "timeout": "30m",
+                    "inputs": {
+                        "parameters": [
+                            {
+                                "name": "aggregated_data"
+                            },
+                            {
+                                "name": "report_date"
+                            },
+                            {
+                                "name": "output_bucket"
+                            }
+                        ]
+                    },
+                    "outputs": {
+                        "parameters": [
+                            {
+                                "name": "report_url",
+                                "valueFrom": {
+                                    "path": "/output/report_url.txt"
+                                }
+                            }
+                        ],
+                        "artifacts": [
+                            {
+                                "name": "report-pdf",
+                                "path": "/output/report.pdf",
+                                "archive": {
+                                    "type": "none"
+                                }
+                            }
+                        ]
+                    },
+                    "executor": {
+                        "type": "container",
+                        "config": {
+                            "image": "report-generator:v3.0.0",
+                            "command": [
+                                "python",
+                                "generate_report.py"
+                            ],
+                            "args": [
+                                "--data",
+                                "{{inputs.parameters.aggregated_data}}",
+                                "--date",
+                                "{{inputs.parameters.report_date}}",
+                                "--bucket",
+                                "{{inputs.parameters.output_bucket}}",
+                                "--output",
+                                "/output"
+                            ]
+                        }
+                    },
+                    "resources": {
+                        "cpu": "2",
+                        "memory": "4Gi"
+                    }
+                },
+                {
+                    "name": "notify-task",
+                    "queue": "api-call",
+                    "timeout": "5m",
+                    "inputs": {
+                        "parameters": [
+                            {
+                                "name": "report_url"
+                            },
+                            {
+                                "name": "channel"
+                            },
+                            {
+                                "name": "report_date"
+                            }
+                        ]
+                    },
+                    "executor": {
+                        "type": "http",
+                        "config": {
+                            "method": "POST",
+                            "url": "https://api.example.com/notifications/send",
+                            "headers": {
+                                "Content-Type": "application/json",
+                                "Authorization": "Bearer {{secrets.notification_api_key}}"
+                            },
+                            "body": {
+                                "channel": "{{inputs.parameters.channel}}",
+                                "message": {
+                                    "title": "📊 Video Data Daily Report - {{inputs.parameters.report_date}}",
+                                    "content": "Daily video data report has been generated successfully",
+                                    "report_url": "{{inputs.parameters.report_url}}",
+                                    "generated_at": "{{workflow.creationTimestamp}}"
+                                }
+                            },
+                            "successCondition": "response.status == 200"
+                        }
+                    },
+                    "retryStrategy": {
+                        "limit": 2,
+                        "retryOn": [
+                            "network-error"
+                        ]
+                    }
+                }
+            ],
+            "hooks": {
+                "onFailure": {
+                    "template": "notify-task",
+                    "arguments": {
+                        "parameters": [
+                            {
+                                "name": "report_url",
+                                "value": ""
+                            },
+                            {
+                                "name": "channel",
+                                "value": "alerts"
+                            },
+                            {
+                                "name": "report_date",
+                                "value": "{{workflow.parameters.report_date}}"
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}

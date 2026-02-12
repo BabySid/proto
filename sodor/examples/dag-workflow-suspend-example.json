@@ -1,0 +1,432 @@
+{
+    "apiVersion": "dag/v1",
+    "kind": "Workflow",
+    "metadata": {
+        "name": "release-with-approval",
+        "namespace": "production",
+        "labels": {
+            "project": "web-app",
+            "type": "release",
+            "env": "production"
+        },
+        "annotations": {
+            "description": "Production release pipeline including build, test, manual approval, and deployment stages",
+            "owner": "devops@example.com",
+            "release-version": "v2.1.0"
+        }
+    },
+    "spec": {
+        "entrypoint": "release-pipeline",
+        "arguments": {
+            "parameters": [
+                {
+                    "name": "git_repo",
+                    "value": "https://github.com/example/web-app.git",
+                    "description": "Git repository URL"
+                },
+                {
+                    "name": "git_branch",
+                    "value": "main",
+                    "description": "Git branch"
+                },
+                {
+                    "name": "version",
+                    "value": "v2.1.0",
+                    "description": "Release version"
+                },
+                {
+                    "name": "deploy_env",
+                    "value": "production",
+                    "enum": ["staging", "production"],
+                    "description": "Deployment environment"
+                },
+                {
+                    "name": "approvers",
+                    "value": ["tech-lead@example.com", "pm@example.com"],
+                    "description": "Approver list"
+                }
+            ]
+        },
+        "globalTimeout": "4h",
+        "templates": [
+            {
+                "name": "release-pipeline",
+                "dag": {
+                    "tasks": [
+                        {
+                            "name": "checkout",
+                            "template": "git-checkout-task",
+                            "arguments": {
+                                "parameters": [
+                                    {"name": "repo", "value": "{{workflow.parameters.git_repo}}"},
+                                    {"name": "branch", "value": "{{workflow.parameters.git_branch}}"}
+                                ]
+                            }
+                        },
+                        {
+                            "name": "build",
+                            "template": "build-task",
+                            "dependencies": ["checkout"],
+                            "arguments": {
+                                "parameters": [
+                                    {"name": "source_path", "value": "{{tasks.checkout.outputs.parameters.workspace}}"},
+                                    {"name": "version", "value": "{{workflow.parameters.version}}"}
+                                ]
+                            }
+                        },
+                        {
+                            "name": "unit-test",
+                            "template": "test-task",
+                            "dependencies": ["build"],
+                            "arguments": {
+                                "parameters": [
+                                    {"name": "artifact_path", "value": "{{tasks.build.outputs.parameters.artifact_path}}"},
+                                    {"name": "test_type", "value": "unit"}
+                                ]
+                            }
+                        },
+                        {
+                            "name": "integration-test",
+                            "template": "test-task",
+                            "dependencies": ["build"],
+                            "arguments": {
+                                "parameters": [
+                                    {"name": "artifact_path", "value": "{{tasks.build.outputs.parameters.artifact_path}}"},
+                                    {"name": "test_type", "value": "integration"}
+                                ]
+                            }
+                        },
+                        {
+                            "name": "security-scan",
+                            "template": "security-scan-task",
+                            "dependencies": ["build"],
+                            "arguments": {
+                                "parameters": [
+                                    {"name": "artifact_path", "value": "{{tasks.build.outputs.parameters.artifact_path}}"}
+                                ]
+                            }
+                        },
+                        {
+                            "name": "approval-gate",
+                            "template": "manual-approval",
+                            "dependencies": ["unit-test", "integration-test", "security-scan"],
+                            "when": "{{workflow.parameters.deploy_env}} == 'production'"
+                        },
+                        {
+                            "name": "deploy-staging",
+                            "template": "deploy-task",
+                            "dependencies": ["unit-test", "integration-test"],
+                            "when": "{{workflow.parameters.deploy_env}} == 'staging'",
+                            "arguments": {
+                                "parameters": [
+                                    {"name": "artifact_path", "value": "{{tasks.build.outputs.parameters.artifact_path}}"},
+                                    {"name": "environment", "value": "staging"},
+                                    {"name": "version", "value": "{{workflow.parameters.version}}"}
+                                ]
+                            }
+                        },
+                        {
+                            "name": "deploy-production",
+                            "template": "deploy-task",
+                            "dependencies": ["approval-gate"],
+                            "when": "{{workflow.parameters.deploy_env}} == 'production'",
+                            "arguments": {
+                                "parameters": [
+                                    {"name": "artifact_path", "value": "{{tasks.build.outputs.parameters.artifact_path}}"},
+                                    {"name": "environment", "value": "production"},
+                                    {"name": "version", "value": "{{workflow.parameters.version}}"}
+                                ]
+                            }
+                        },
+                        {
+                            "name": "smoke-test",
+                            "template": "smoke-test-task",
+                            "dependencies": ["deploy-staging", "deploy-production"],
+                            "arguments": {
+                                "parameters": [
+                                    {"name": "environment", "value": "{{workflow.parameters.deploy_env}}"}
+                                ]
+                            }
+                        },
+                        {
+                            "name": "notify",
+                            "template": "notify-task",
+                            "dependencies": ["smoke-test"],
+                            "arguments": {
+                                "parameters": [
+                                    {"name": "version", "value": "{{workflow.parameters.version}}"},
+                                    {"name": "environment", "value": "{{workflow.parameters.deploy_env}}"},
+                                    {"name": "status", "value": "success"}
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "manual-approval",
+                "suspend": {
+                    "message": "🚀 Production Release Approval\n\nVersion: {{workflow.parameters.version}}\nBranch: {{workflow.parameters.git_branch}}\n\nAll tests have passed. Please approve to proceed with production deployment.\n\nApprovers: {{workflow.parameters.approvers}}",
+                    "duration": "24h"
+                }
+            },
+            {
+                "name": "wait-for-data",
+                "suspend": {
+                    "message": "Waiting for upstream data to be ready",
+                    "condition": "{{workflow.annotations.data_ready}} == 'true'"
+                }
+            },
+            {
+                "name": "scheduled-wait",
+                "suspend": {
+                    "duration": "30m",
+                    "message": "Waiting 30 minutes before continuing execution"
+                }
+            },
+            {
+                "name": "git-checkout-task",
+                "queue": "ci-build",
+                "timeout": "5m",
+                "inputs": {
+                    "parameters": [
+                        {"name": "repo"},
+                        {"name": "branch"}
+                    ]
+                },
+                "outputs": {
+                    "parameters": [
+                        {"name": "workspace", "valueFrom": {"path": "/output/workspace.txt"}},
+                        {"name": "commit_sha", "valueFrom": {"path": "/output/commit.txt"}}
+                    ]
+                },
+                "executor": {
+                    "type": "container",
+                    "config": {
+                        "image": "git-tools:v1.0",
+                        "command": ["git", "clone"],
+                        "args": [
+                            "--branch", "{{inputs.parameters.branch}}",
+                            "--depth", "1",
+                            "{{inputs.parameters.repo}}",
+                            "/workspace"
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "build-task",
+                "queue": "ci-build",
+                "timeout": "20m",
+                "inputs": {
+                    "parameters": [
+                        {"name": "source_path"},
+                        {"name": "version"}
+                    ]
+                },
+                "outputs": {
+                    "parameters": [
+                        {"name": "artifact_path", "valueFrom": {"path": "/output/artifact.txt"}},
+                        {"name": "image_tag", "valueFrom": {"path": "/output/image_tag.txt"}}
+                    ]
+                },
+                "executor": {
+                    "type": "container",
+                    "config": {
+                        "image": "docker-builder:v2.0",
+                        "command": ["build.sh"],
+                        "args": [
+                            "--source", "{{inputs.parameters.source_path}}",
+                            "--version", "{{inputs.parameters.version}}",
+                            "--output", "/output"
+                        ],
+                        "env": [
+                            {
+                                "name": "DOCKER_REGISTRY",
+                                "value": "registry.example.com"
+                            }
+                        ]
+                    }
+                },
+                "resources": {
+                    "cpu": "4",
+                    "memory": "8Gi"
+                }
+            },
+            {
+                "name": "test-task",
+                "queue": "ci-test",
+                "timeout": "30m",
+                "inputs": {
+                    "parameters": [
+                        {"name": "artifact_path"},
+                        {"name": "test_type"}
+                    ]
+                },
+                "outputs": {
+                    "parameters": [
+                        {"name": "test_result", "valueFrom": {"path": "/output/result.json"}},
+                        {"name": "coverage", "valueFrom": {"jsonPath": "$.coverage", "path": "/output/result.json"}}
+                    ]
+                },
+                "executor": {
+                    "type": "container",
+                    "config": {
+                        "image": "test-runner:v1.5",
+                        "command": ["run-tests.sh"],
+                        "args": [
+                            "--artifact", "{{inputs.parameters.artifact_path}}",
+                            "--type", "{{inputs.parameters.test_type}}",
+                            "--output", "/output"
+                        ]
+                    }
+                },
+                "resources": {
+                    "cpu": "2",
+                    "memory": "4Gi"
+                }
+            },
+            {
+                "name": "security-scan-task",
+                "queue": "ci-security",
+                "timeout": "15m",
+                "inputs": {
+                    "parameters": [
+                        {"name": "artifact_path"}
+                    ]
+                },
+                "outputs": {
+                    "parameters": [
+                        {"name": "scan_result", "valueFrom": {"path": "/output/scan.json"}},
+                        {"name": "vulnerabilities", "valueFrom": {"jsonPath": "$.vulnerabilities", "path": "/output/scan.json"}}
+                    ]
+                },
+                "executor": {
+                    "type": "container",
+                    "config": {
+                        "image": "security-scanner:v3.0",
+                        "command": ["scan.sh"],
+                        "args": [
+                            "--artifact", "{{inputs.parameters.artifact_path}}",
+                            "--output", "/output"
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "deploy-task",
+                "queue": "cd-deploy",
+                "timeout": "15m",
+                "inputs": {
+                    "parameters": [
+                        {"name": "artifact_path"},
+                        {"name": "environment"},
+                        {"name": "version"}
+                    ]
+                },
+                "outputs": {
+                    "parameters": [
+                        {"name": "deploy_url", "valueFrom": {"path": "/output/url.txt"}}
+                    ]
+                },
+                "executor": {
+                    "type": "container",
+                    "config": {
+                        "image": "deploy-tools:v2.0",
+                        "command": ["deploy.sh"],
+                        "args": [
+                            "--artifact", "{{inputs.parameters.artifact_path}}",
+                            "--env", "{{inputs.parameters.environment}}",
+                            "--version", "{{inputs.parameters.version}}"
+                        ],
+                        "env": [
+                            {
+                                "name": "KUBE_CONFIG",
+                                "valueFrom": {
+                                    "secretKeyRef": {
+                                        "name": "k8s-credentials",
+                                        "key": "config"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                "retryStrategy": {
+                    "limit": 2,
+                    "retryOn": ["transient-error"]
+                }
+            },
+            {
+                "name": "smoke-test-task",
+                "queue": "ci-test",
+                "timeout": "10m",
+                "inputs": {
+                    "parameters": [
+                        {"name": "environment"}
+                    ]
+                },
+                "outputs": {
+                    "parameters": [
+                        {"name": "result", "valueFrom": {"path": "/output/result.txt"}}
+                    ]
+                },
+                "executor": {
+                    "type": "http",
+                    "config": {
+                        "method": "POST",
+                        "url": "https://api.internal.example.com/smoke-test",
+                        "headers": {
+                            "Content-Type": "application/json",
+                            "Authorization": "Bearer {{secrets.internal_api_token}}"
+                        },
+                        "body": {
+                            "environment": "{{inputs.parameters.environment}}",
+                            "tests": ["health", "api", "performance"]
+                        },
+                        "successCondition": "response.body.status == 'passed'"
+                    }
+                }
+            },
+            {
+                "name": "notify-task",
+                "queue": "api-call",
+                "timeout": "1m",
+                "inputs": {
+                    "parameters": [
+                        {"name": "version"},
+                        {"name": "environment"},
+                        {"name": "status"}
+                    ]
+                },
+                "executor": {
+                    "type": "http",
+                    "config": {
+                        "method": "POST",
+                        "url": "https://api.example.com/notifications/slack",
+                        "headers": {
+                            "Content-Type": "application/json",
+                            "Authorization": "Bearer {{secrets.slack_webhook_token}}"
+                        },
+                        "body": {
+                            "channel": "#releases",
+                            "message": "🎉 Release Successful!\nVersion: {{inputs.parameters.version}}\nEnvironment: {{inputs.parameters.environment}}\nStatus: {{inputs.parameters.status}}\nTime: {{workflow.finishedAt}}"
+                        }
+                    }
+                }
+            }
+        ],
+        "hooks": {
+            "onFailure": {
+                "template": "notify-task",
+                "arguments": {
+                    "parameters": [
+                        {"name": "version", "value": "{{workflow.parameters.version}}"},
+                        {"name": "environment", "value": "{{workflow.parameters.deploy_env}}"},
+                        {"name": "status", "value": "failed"}
+                    ]
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,523 @@
+{
+    "apiVersion": "dag/v1",
+    "kind": "Workflow",
+    "metadata": {
+        "name": "video-processing-with-nested-dag",
+        "namespace": "production",
+        "labels": {
+            "project": "ai-video",
+            "type": "nested-dag-example"
+        },
+        "annotations": {
+            "description": "Video processing pipeline using nested DAGs for sub-workflow reuse",
+            "owner": "ai-team@example.com"
+        }
+    },
+    "spec": {
+        "entrypoint": "main-pipeline",
+        "maxNestedDepth": 2,
+        "arguments": {
+            "parameters": [
+                {
+                    "name": "video_url",
+                    "value": "https://cdn.example.com/uploads/source.mp4",
+                    "description": "Source video URL"
+                },
+                {
+                    "name": "output_formats",
+                    "value": ["mp4", "webm"],
+                    "description": "Output format list"
+                },
+                {
+                    "name": "callback_url",
+                    "value": "https://api.example.com/webhook/complete",
+                    "description": "Completion callback URL"
+                }
+            ]
+        },
+        "globalTimeout": "3h",
+        "priority": 500,
+        "templates": [
+            {
+                "name": "main-pipeline",
+                "dag": {
+                    "tasks": [
+                        {
+                            "name": "download",
+                            "template": "download-task",
+                            "arguments": {
+                                "parameters": [
+                                    {"name": "url", "value": "{{workflow.parameters.video_url}}"}
+                                ]
+                            }
+                        },
+                        {
+                            "name": "analyze",
+                            "template": "analyze-task",
+                            "dependencies": ["download"],
+                            "arguments": {
+                                "parameters": [
+                                    {"name": "video_path", "value": "{{tasks.download.outputs.parameters.local_path}}"}
+                                ]
+                            }
+                        },
+                        {
+                            "name": "encoding-pipeline",
+                            "template": "video-encoding-subdag",
+                            "dependencies": ["analyze"],
+                            "arguments": {
+                                "parameters": [
+                                    {"name": "source_path", "value": "{{tasks.download.outputs.parameters.local_path}}"},
+                                    {"name": "metadata", "value": "{{tasks.analyze.outputs.parameters.metadata}}"},
+                                    {"name": "format", "value": "mp4"}
+                                ]
+                            }
+                        },
+                        {
+                            "name": "thumbnail-pipeline",
+                            "template": "thumbnail-generation-subdag",
+                            "dependencies": ["analyze"],
+                            "arguments": {
+                                "parameters": [
+                                    {"name": "video_path", "value": "{{tasks.download.outputs.parameters.local_path}}"},
+                                    {"name": "duration", "value": "{{tasks.analyze.outputs.parameters.duration}}"}
+                                ]
+                            }
+                        },
+                        {
+                            "name": "finalize",
+                            "template": "finalize-task",
+                            "dependencies": ["encoding-pipeline", "thumbnail-pipeline"],
+                            "arguments": {
+                                "parameters": [
+                                    {"name": "video_url", "value": "{{tasks.encoding-pipeline.outputs.parameters.output_url}}"},
+                                    {"name": "thumbnail_url", "value": "{{tasks.thumbnail-pipeline.outputs.parameters.thumbnail_url}}"},
+                                    {"name": "callback_url", "value": "{{workflow.parameters.callback_url}}"}
+                                ]
+                            }
+                        }
+                    ],
+                    "failFast": true
+                }
+            },
+            {
+                "name": "video-encoding-subdag",
+                "inputs": {
+                    "parameters": [
+                        {"name": "source_path"},
+                        {"name": "metadata"},
+                        {"name": "format", "default": "mp4"}
+                    ]
+                },
+                "outputs": {
+                    "parameters": [
+                        {
+                            "name": "output_url",
+                            "valueFrom": {
+                                "parameter": "{{tasks.upload.outputs.parameters.url}}"
+                            }
+                        },
+                        {
+                            "name": "file_size",
+                            "valueFrom": {
+                                "parameter": "{{tasks.upload.outputs.parameters.size}}"
+                            }
+                        }
+                    ],
+                    "artifacts": [
+                        {
+                            "name": "encoded_video",
+                            "from": "{{tasks.upload.outputs.artifacts.file}}"
+                        }
+                    ]
+                },
+                "dag": {
+                    "tasks": [
+                        {
+                            "name": "transcode",
+                            "template": "transcode-task",
+                            "arguments": {
+                                "parameters": [
+                                    {"name": "input", "value": "{{inputs.parameters.source_path}}"},
+                                    {"name": "format", "value": "{{inputs.parameters.format}}"},
+                                    {"name": "metadata", "value": "{{inputs.parameters.metadata}}"}
+                                ]
+                            }
+                        },
+                        {
+                            "name": "optimize",
+                            "template": "optimize-task",
+                            "dependencies": ["transcode"],
+                            "arguments": {
+                                "parameters": [
+                                    {"name": "video_path", "value": "{{tasks.transcode.outputs.parameters.output_path}}"}
+                                ]
+                            }
+                        },
+                        {
+                            "name": "upload",
+                            "template": "upload-task",
+                            "dependencies": ["optimize"],
+                            "arguments": {
+                                "parameters": [
+                                    {"name": "file_path", "value": "{{tasks.optimize.outputs.parameters.optimized_path}}"},
+                                    {"name": "destination", "value": "oss://videos/{{workflow.uid}}/"}
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "thumbnail-generation-subdag",
+                "inputs": {
+                    "parameters": [
+                        {"name": "video_path"},
+                        {"name": "duration"}
+                    ]
+                },
+                "outputs": {
+                    "parameters": [
+                        {
+                            "name": "thumbnail_url",
+                            "valueFrom": {
+                                "parameter": "{{tasks.upload-thumb.outputs.parameters.url}}"
+                            }
+                        },
+                        {
+                            "name": "sprite_url",
+                            "valueFrom": {
+                                "parameter": "{{tasks.upload-sprite.outputs.parameters.url}}"
+                            }
+                        }
+                    ]
+                },
+                "dag": {
+                    "tasks": [
+                        {
+                            "name": "extract-frames",
+                            "template": "extract-frames-task",
+                            "arguments": {
+                                "parameters": [
+                                    {"name": "video", "value": "{{inputs.parameters.video_path}}"},
+                                    {"name": "duration", "value": "{{inputs.parameters.duration}}"}
+                                ]
+                            }
+                        },
+                        {
+                            "name": "select-best",
+                            "template": "select-thumbnail-task",
+                            "dependencies": ["extract-frames"],
+                            "arguments": {
+                                "parameters": [
+                                    {"name": "frames_dir", "value": "{{tasks.extract-frames.outputs.parameters.frames_dir}}"}
+                                ]
+                            }
+                        },
+                        {
+                            "name": "generate-sprite",
+                            "template": "sprite-task",
+                            "dependencies": ["extract-frames"],
+                            "arguments": {
+                                "parameters": [
+                                    {"name": "frames_dir", "value": "{{tasks.extract-frames.outputs.parameters.frames_dir}}"}
+                                ]
+                            }
+                        },
+                        {
+                            "name": "upload-thumb",
+                            "template": "upload-task",
+                            "dependencies": ["select-best"],
+                            "arguments": {
+                                "parameters": [
+                                    {"name": "file_path", "value": "{{tasks.select-best.outputs.parameters.thumbnail_path}}"},
+                                    {"name": "destination", "value": "oss://thumbnails/{{workflow.uid}}/"}
+                                ]
+                            }
+                        },
+                        {
+                            "name": "upload-sprite",
+                            "template": "upload-task",
+                            "dependencies": ["generate-sprite"],
+                            "arguments": {
+                                "parameters": [
+                                    {"name": "file_path", "value": "{{tasks.generate-sprite.outputs.parameters.sprite_path}}"},
+                                    {"name": "destination", "value": "oss://sprites/{{workflow.uid}}/"}
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "download-task",
+                "queue": "file-process",
+                "timeout": "15m",
+                "inputs": {
+                    "parameters": [{"name": "url"}]
+                },
+                "outputs": {
+                    "parameters": [
+                        {"name": "local_path", "valueFrom": {"path": "/output/path.txt"}}
+                    ]
+                },
+                "executor": {
+                    "type": "function",
+                    "config": {
+                        "name": "file-download",
+                        "arguments": {
+                            "url": "{{inputs.parameters.url}}",
+                            "destination": "/data/download"
+                        }
+                    }
+                },
+                "retryStrategy": {
+                    "limit": 3,
+                    "retryOn": ["network-error", "timeout"]
+                }
+            },
+            {
+                "name": "analyze-task",
+                "queue": "file-process",
+                "timeout": "5m",
+                "inputs": {
+                    "parameters": [{"name": "video_path"}]
+                },
+                "outputs": {
+                    "parameters": [
+                        {"name": "metadata", "valueFrom": {"path": "/output/metadata.json"}},
+                        {"name": "duration", "valueFrom": {"jsonPath": "$.duration", "path": "/output/metadata.json"}}
+                    ]
+                },
+                "executor": {
+                    "type": "container",
+                    "config": {
+                        "image": "video-tools:v2.0",
+                        "command": ["ffprobe"],
+                        "args": [
+                            "-v", "quiet",
+                            "-print_format", "json",
+                            "-show_format", "-show_streams",
+                            "{{inputs.parameters.video_path}}",
+                            "-o", "/output/metadata.json"
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "transcode-task",
+                "queue": "gpu-render",
+                "timeout": "45m",
+                "inputs": {
+                    "parameters": [
+                        {"name": "input"},
+                        {"name": "format"},
+                        {"name": "metadata"}
+                    ]
+                },
+                "outputs": {
+                    "parameters": [
+                        {"name": "output_path", "valueFrom": {"path": "/output/video_path.txt"}}
+                    ]
+                },
+                "executor": {
+                    "type": "container",
+                    "config": {
+                        "image": "video-encoder:v3.0",
+                        "command": ["python", "transcode.py"],
+                        "args": [
+                            "--input", "{{inputs.parameters.input}}",
+                            "--format", "{{inputs.parameters.format}}",
+                            "--output-dir", "/output"
+                        ],
+                        "env": [
+                            {"name": "CUDA_VISIBLE_DEVICES", "value": "0"}
+                        ]
+                    }
+                },
+                "resources": {
+                    "cpu": "4",
+                    "memory": "16Gi",
+                    "gpu": 1,
+                    "gpuType": "nvidia-t4"
+                }
+            },
+            {
+                "name": "optimize-task",
+                "queue": "file-process",
+                "timeout": "20m",
+                "inputs": {
+                    "parameters": [{"name": "video_path"}]
+                },
+                "outputs": {
+                    "parameters": [
+                        {"name": "optimized_path", "valueFrom": {"path": "/output/optimized_path.txt"}}
+                    ]
+                },
+                "executor": {
+                    "type": "container",
+                    "config": {
+                        "image": "video-tools:v2.0",
+                        "command": ["ffmpeg"],
+                        "args": [
+                            "-i", "{{inputs.parameters.video_path}}",
+                            "-movflags", "+faststart",
+                            "/output/optimized.mp4"
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "upload-task",
+                "queue": "file-process",
+                "timeout": "10m",
+                "inputs": {
+                    "parameters": [
+                        {"name": "file_path"},
+                        {"name": "destination"}
+                    ]
+                },
+                "outputs": {
+                    "parameters": [
+                        {"name": "url", "valueFrom": {"path": "/output/url.txt"}},
+                        {"name": "size", "valueFrom": {"path": "/output/size.txt"}}
+                    ],
+                    "artifacts": [
+                        {"name": "file", "path": "/output/uploaded_file"}
+                    ]
+                },
+                "executor": {
+                    "type": "function",
+                    "config": {
+                        "name": "file-upload",
+                        "arguments": {
+                            "source": "{{inputs.parameters.file_path}}",
+                            "destination": "{{inputs.parameters.destination}}"
+                        }
+                    }
+                }
+            },
+            {
+                "name": "extract-frames-task",
+                "queue": "file-process",
+                "timeout": "10m",
+                "inputs": {
+                    "parameters": [
+                        {"name": "video"},
+                        {"name": "duration"}
+                    ]
+                },
+                "outputs": {
+                    "parameters": [
+                        {"name": "frames_dir", "valueFrom": {"path": "/output/frames_dir.txt"}}
+                    ]
+                },
+                "executor": {
+                    "type": "container",
+                    "config": {
+                        "image": "video-tools:v2.0",
+                        "command": ["python", "extract_frames.py"],
+                        "args": [
+                            "--input", "{{inputs.parameters.video}}",
+                            "--duration", "{{inputs.parameters.duration}}",
+                            "--output-dir", "/output/frames"
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "select-thumbnail-task",
+                "queue": "gpu-render",
+                "timeout": "5m",
+                "inputs": {
+                    "parameters": [{"name": "frames_dir"}]
+                },
+                "outputs": {
+                    "parameters": [
+                        {"name": "thumbnail_path", "valueFrom": {"path": "/output/thumb_path.txt"}}
+                    ]
+                },
+                "executor": {
+                    "type": "container",
+                    "config": {
+                        "image": "image-quality:v1.0",
+                        "command": ["python", "select_best.py"],
+                        "args": [
+                            "--frames-dir", "{{inputs.parameters.frames_dir}}",
+                            "--output", "/output/thumbnail.jpg"
+                        ]
+                    }
+                },
+                "resources": {
+                    "gpu": 1
+                }
+            },
+            {
+                "name": "sprite-task",
+                "queue": "file-process",
+                "timeout": "5m",
+                "inputs": {
+                    "parameters": [{"name": "frames_dir"}]
+                },
+                "outputs": {
+                    "parameters": [
+                        {"name": "sprite_path", "valueFrom": {"path": "/output/sprite_path.txt"}}
+                    ]
+                },
+                "executor": {
+                    "type": "container",
+                    "config": {
+                        "image": "image-tools:v1.0",
+                        "command": ["python", "generate_sprite.py"],
+                        "args": [
+                            "--frames-dir", "{{inputs.parameters.frames_dir}}",
+                            "--output", "/output/sprite.jpg"
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "finalize-task",
+                "queue": "api-call",
+                "timeout": "1m",
+                "inputs": {
+                    "parameters": [
+                        {"name": "video_url"},
+                        {"name": "thumbnail_url"},
+                        {"name": "callback_url"}
+                    ]
+                },
+                "executor": {
+                    "type": "http",
+                    "config": {
+                        "method": "POST",
+                        "url": "{{inputs.parameters.callback_url}}",
+                        "headers": {
+                            "Content-Type": "application/json",
+                            "X-Webhook-Signature": "{{secrets.webhook_secret}}"
+                        },
+                        "body": {
+                            "event": "video.processed",
+                            "workflow_id": "{{workflow.uid}}",
+                            "status": "success",
+                            "result": {
+                                "video_url": "{{inputs.parameters.video_url}}",
+                                "thumbnail_url": "{{inputs.parameters.thumbnail_url}}"
+                            },
+                            "timestamp": "{{workflow.finishedAt}}"
+                        }
+                    }
+                },
+                "retryStrategy": {
+                    "limit": 5,
+                    "retryOn": ["network-error", "timeout"],
+                    "backoff": {
+                        "duration": "5s",
+                        "factor": 2,
+                        "maxDuration": "2m"
+                    }
+                }
+            }
+        ]
+    }
+}
