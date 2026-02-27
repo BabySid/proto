@@ -2,19 +2,19 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "$id": "https://dag-workflow.io/schema/v1/workflow.json",
     "title": "DAG Workflow Protocol Schema",
-    "description": "DAG Workflow Protocol JSON Schema Definition",
+    "description": "DAG 工作流协议 JSON Schema 定义",
     "definitions": {
         "name": {
             "type": "string",
             "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$",
             "minLength": 1,
             "maxLength": 63,
-            "description": "Name conforming to DNS-1123 specification"
+            "description": "符合 DNS-1123 规范的名称"
         },
         "duration": {
             "type": "string",
             "pattern": "^([0-9]+d)?([0-9]+h)?([0-9]+m)?([0-9]+s)?$",
-            "description": "Duration format, e.g. 30s, 5m, 2h, 1d, 1h30m",
+            "description": "时长格式，如 30s, 5m, 2h, 1d, 1h30m",
             "examples": [
                 "30s",
                 "5m",
@@ -26,33 +26,33 @@
         "templateVariable": {
             "type": "string",
             "pattern": ".*\\{\\{.*\\}\\}.*",
-            "description": "String containing template variables, e.g. {{workflow.parameters.xxx}}"
+            "description": "包含模板变量的字符串，如 {{workflow.parameters.xxx}}"
         },
         "metadata": {
             "type": "object",
             "properties": {
                 "name": {
                     "$ref": "#/definitions/name",
-                    "description": "Resource name, must be unique"
+                    "description": "资源名称，必须唯一"
                 },
                 "namespace": {
                     "type": "string",
                     "default": "default",
-                    "description": "Namespace for resource isolation"
+                    "description": "命名空间，用于资源隔离"
                 },
                 "labels": {
                     "type": "object",
                     "additionalProperties": {
                         "type": "string"
                     },
-                    "description": "Labels for classification and filtering"
+                    "description": "标签，用于分类和筛选"
                 },
                 "annotations": {
                     "type": "object",
                     "additionalProperties": {
                         "type": "string"
                     },
-                    "description": "Annotations for storing additional metadata"
+                    "description": "注解，存储额外元信息"
                 }
             },
             "required": [
@@ -66,7 +66,7 @@
                 "name": {
                     "type": "string",
                     "minLength": 1,
-                    "description": "Parameter name"
+                    "description": "参数名称"
                 },
                 "value": {
                     "oneOf": [
@@ -86,7 +86,7 @@
                             "type": "array"
                         }
                     ],
-                    "description": "Parameter value"
+                    "description": "参数值"
                 },
                 "default": {
                     "oneOf": [
@@ -106,11 +106,11 @@
                             "type": "array"
                         }
                     ],
-                    "description": "Default value"
+                    "description": "默认值"
                 },
                 "description": {
                     "type": "string",
-                    "description": "Parameter description"
+                    "description": "参数描述"
                 },
                 "enum": {
                     "type": "array",
@@ -124,11 +124,11 @@
                             }
                         ]
                     },
-                    "description": "Enumeration of allowed values"
+                    "description": "可选值枚举"
                 },
                 "valueFrom": {
                     "$ref": "#/definitions/valueFrom",
-                    "description": "Value source"
+                    "description": "值来源"
                 }
             },
             "required": [
@@ -141,15 +141,15 @@
             "properties": {
                 "path": {
                     "type": "string",
-                    "description": "Read value from file path"
+                    "description": "从文件路径读取值"
                 },
                 "parameter": {
                     "type": "string",
-                    "description": "Reference value from another parameter"
+                    "description": "从其他参数引用值"
                 },
                 "expression": {
                     "type": "string",
-                    "description": "Compute value via expression"
+                    "description": "通过表达式计算值"
                 },
                 "secretKeyRef": {
                     "type": "object",
@@ -165,7 +165,7 @@
                         "name",
                         "key"
                     ],
-                    "description": "Reference value from a Secret"
+                    "description": "从 Secret 引用值"
                 }
             },
             "additionalProperties": false
@@ -176,19 +176,19 @@
                 "name": {
                     "type": "string",
                     "minLength": 1,
-                    "description": "Artifact name"
+                    "description": "Artifact 名称"
                 },
                 "path": {
                     "type": "string",
-                    "description": "Path of the artifact inside the container"
+                    "description": "Artifact 在容器内的路径"
                 },
                 "from": {
                     "type": "string",
-                    "description": "Reference an artifact from another task"
+                    "description": "引用其他任务的 Artifact"
                 },
                 "source": {
                     "$ref": "#/definitions/artifactSource",
-                    "description": "Artifact source"
+                    "description": "Artifact 来源"
                 },
                 "archive": {
                     "type": "object",
@@ -204,7 +204,7 @@
                             "default": "tar.gz"
                         }
                     },
-                    "description": "Archive configuration"
+                    "description": "归档配置"
                 }
             },
             "required": [
@@ -221,15 +221,15 @@
                         "oss",
                         "http"
                     ],
-                    "description": "Storage type"
+                    "description": "存储类型"
                 },
                 "bucket": {
                     "type": "string",
-                    "description": "Bucket name"
+                    "description": "存储桶名称"
                 },
                 "key": {
                     "type": "string",
-                    "description": "Object key/path"
+                    "description": "对象键/路径"
                 },
                 "url": {
                     "type": "string",
@@ -250,14 +250,14 @@
                     "items": {
                         "$ref": "#/definitions/parameter"
                     },
-                    "description": "Parameter list"
+                    "description": "参数列表"
                 },
                 "artifacts": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/artifact"
                     },
-                    "description": "Artifact list"
+                    "description": "Artifact 列表"
                 }
             },
             "additionalProperties": false
@@ -270,14 +270,14 @@
                     "items": {
                         "$ref": "#/definitions/parameter"
                     },
-                    "description": "Input parameter list"
+                    "description": "输入参数列表"
                 },
                 "artifacts": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/artifact"
                     },
-                    "description": "Input artifact list"
+                    "description": "输入 Artifact 列表"
                 }
             },
             "additionalProperties": false
@@ -290,14 +290,14 @@
                     "items": {
                         "$ref": "#/definitions/parameter"
                     },
-                    "description": "Output parameter list"
+                    "description": "输出参数列表"
                 },
                 "artifacts": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/artifact"
                     },
-                    "description": "Output artifact list"
+                    "description": "输出 Artifact 列表"
                 }
             },
             "additionalProperties": false
@@ -310,7 +310,7 @@
                     "minimum": 0,
                     "maximum": 100,
                     "default": 0,
-                    "description": "Maximum number of retries"
+                    "description": "最大重试次数"
                 },
                 "retryOn": {
                     "type": "array",
@@ -324,15 +324,15 @@
                             "always"
                         ]
                     },
-                    "description": "Error types that trigger a retry"
+                    "description": "触发重试的错误类型"
                 },
                 "backoff": {
                     "$ref": "#/definitions/backoff",
-                    "description": "Backoff strategy"
+                    "description": "退避策略"
                 },
                 "expression": {
                     "type": "string",
-                    "description": "Custom retry condition expression"
+                    "description": "自定义重试条件表达式"
                 }
             },
             "additionalProperties": false
@@ -343,19 +343,19 @@
                 "duration": {
                     "$ref": "#/definitions/duration",
                     "default": "1s",
-                    "description": "Initial wait duration"
+                    "description": "初始等待时间"
                 },
                 "factor": {
                     "type": "number",
                     "minimum": 1,
                     "maximum": 10,
                     "default": 2,
-                    "description": "Exponential factor"
+                    "description": "指数因子"
                 },
                 "maxDuration": {
                     "$ref": "#/definitions/duration",
                     "default": "1m",
-                    "description": "Maximum wait duration"
+                    "description": "最大等待时间"
                 }
             },
             "additionalProperties": false
@@ -366,12 +366,12 @@
                 "failed": {
                     "type": "boolean",
                     "default": false,
-                    "description": "Whether to continue when the task fails"
+                    "description": "任务失败时是否继续"
                 },
                 "error": {
                     "type": "boolean",
                     "default": false,
-                    "description": "Whether to continue when the task errors"
+                    "description": "任务出错时是否继续"
                 }
             },
             "additionalProperties": false
@@ -389,17 +389,17 @@
                             "type": "number"
                         }
                     ],
-                    "description": "CPU resource, e.g. '100m' or '1'"
+                    "description": "CPU 资源，如 '100m' 或 '1'"
                 },
                 "memory": {
                     "type": "string",
                     "pattern": "^[0-9]+(Ki|Mi|Gi|Ti)?$",
-                    "description": "Memory resource, e.g. '256Mi', '1Gi'"
+                    "description": "内存资源，如 '256Mi', '1Gi'"
                 },
                 "gpu": {
                     "type": "integer",
                     "minimum": 0,
-                    "description": "Number of GPUs"
+                    "description": "GPU 数量"
                 }
             },
             "additionalProperties": false
@@ -411,19 +411,15 @@
                     "type": "string",
                     "enum": [
                         "http",
-                        "container",
                         "script",
                         "function"
                     ],
-                    "description": "Executor type"
+                    "description": "执行器类型"
                 },
                 "config": {
                     "oneOf": [
                         {
                             "$ref": "#/definitions/httpConfig"
-                        },
-                        {
-                            "$ref": "#/definitions/containerConfig"
                         },
                         {
                             "$ref": "#/definitions/scriptConfig"
@@ -432,7 +428,7 @@
                             "$ref": "#/definitions/functionConfig"
                         }
                     ],
-                    "description": "Executor configuration"
+                    "description": "执行器配置"
                 }
             },
             "required": [
@@ -454,18 +450,18 @@
                         "PATCH"
                     ],
                     "default": "GET",
-                    "description": "HTTP method"
+                    "description": "HTTP 方法"
                 },
                 "url": {
                     "type": "string",
-                    "description": "Request URL"
+                    "description": "请求 URL"
                 },
                 "headers": {
                     "type": "object",
                     "additionalProperties": {
                         "type": "string"
                     },
-                    "description": "Request headers"
+                    "description": "请求头"
                 },
                 "body": {
                     "oneOf": [
@@ -476,80 +472,21 @@
                             "type": "object"
                         }
                     ],
-                    "description": "Request body"
+                    "description": "请求体"
                 },
                 "timeout": {
                     "$ref": "#/definitions/duration",
                     "default": "30s",
-                    "description": "Request timeout"
+                    "description": "请求超时"
                 },
                 "successCondition": {
                     "type": "string",
                     "default": "response.status >= 200 && response.status < 300",
-                    "description": "Success condition expression"
+                    "description": "成功条件表达式"
                 }
             },
             "required": [
                 "url"
-            ],
-            "additionalProperties": false
-        },
-        "containerConfig": {
-            "type": "object",
-            "properties": {
-                "image": {
-                    "type": "string",
-                    "description": "Container image"
-                },
-                "command": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    },
-                    "description": "Container command"
-                },
-                "args": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    },
-                    "description": "Command arguments"
-                },
-                "env": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/envVar"
-                    },
-                    "description": "Environment variables"
-                },
-                "workingDir": {
-                    "type": "string",
-                    "description": "Working directory"
-                }
-            },
-            "required": [
-                "image"
-            ],
-            "additionalProperties": false
-        },
-        "envVar": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "description": "Environment variable name"
-                },
-                "value": {
-                    "type": "string",
-                    "description": "Environment variable value"
-                },
-                "valueFrom": {
-                    "$ref": "#/definitions/valueFrom",
-                    "description": "Value source"
-                }
-            },
-            "required": [
-                "name"
             ],
             "additionalProperties": false
         },
@@ -564,11 +501,11 @@
                         "bash",
                         "sh"
                     ],
-                    "description": "Script runtime"
+                    "description": "脚本运行时"
                 },
                 "source": {
                     "type": "string",
-                    "description": "Script source code"
+                    "description": "脚本源码"
                 }
             },
             "required": [
@@ -589,12 +526,12 @@
                         "notify",
                         "sleep"
                     ],
-                    "description": "Built-in function name"
+                    "description": "内置函数名称"
                 },
                 "arguments": {
                     "type": "object",
                     "additionalProperties": true,
-                    "description": "Function arguments"
+                    "description": "函数参数"
                 }
             },
             "required": [
@@ -607,17 +544,96 @@
             "properties": {
                 "duration": {
                     "$ref": "#/definitions/duration",
-                    "description": "Auto-resume duration; manual resume required if not set"
+                    "description": "自动恢复时间，不设置则需手动恢复"
                 },
                 "message": {
                     "type": "string",
-                    "description": "Message displayed to the approver"
+                    "description": "显示给审批者的消息"
                 },
                 "condition": {
                     "type": "string",
-                    "description": "Auto-resume when the condition is met"
+                    "description": "条件满足时自动恢复"
                 }
             },
+            "additionalProperties": false
+        },
+        "switchSpec": {
+            "type": "object",
+            "description": "Switch 条件分支定义，根据表达式结果路由到不同分支执行",
+            "properties": {
+                "on": {
+                    "type": "string",
+                    "description": "求值表达式，支持模板变量。结果与 cases[].value 做匹配"
+                },
+                "cases": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/switchCase"
+                    },
+                    "minItems": 1,
+                    "description": "分支列表，按顺序匹配，首个匹配的 case 胜出"
+                },
+                "default": {
+                    "$ref": "#/definitions/switchBranch",
+                    "description": "默认分支，所有 case 都不匹配时执行"
+                }
+            },
+            "required": [
+                "on",
+                "cases"
+            ],
+            "additionalProperties": false
+        },
+        "switchCase": {
+            "type": "object",
+            "description": "Switch 的单个分支定义，value 和 when 二选一",
+            "properties": {
+                "value": {
+                    "oneOf": [
+                        { "type": "string" },
+                        { "type": "number" },
+                        { "type": "boolean" }
+                    ],
+                    "description": "匹配值，与 on 表达式结果做相等比较"
+                },
+                "when": {
+                    "type": "string",
+                    "description": "条件表达式（与 value 二选一，用于复杂条件）"
+                },
+                "task": {
+                    "$ref": "#/definitions/switchBranch",
+                    "description": "匹配时执行的分支"
+                }
+            },
+            "required": [
+                "task"
+            ],
+            "oneOf": [
+                {
+                    "required": ["value", "task"]
+                },
+                {
+                    "required": ["when", "task"]
+                }
+            ],
+            "additionalProperties": false
+        },
+        "switchBranch": {
+            "type": "object",
+            "description": "Switch 分支执行定义，指定要执行的模板和参数",
+            "properties": {
+                "template": {
+                    "type": "string",
+                    "description": "引用的模板名称"
+                },
+                "arguments": {
+                    "$ref": "#/definitions/arguments",
+                    "description": "传递给模板的参数"
+                }
+            },
+            "required": [
+                "template"
+            ],
             "additionalProperties": false
         },
         "task": {
@@ -625,11 +641,11 @@
             "properties": {
                 "name": {
                     "$ref": "#/definitions/name",
-                    "description": "Task name, unique within the DAG"
+                    "description": "任务名称，在 DAG 内唯一"
                 },
                 "template": {
                     "type": "string",
-                    "description": "Referenced template name"
+                    "description": "引用的模板名称"
                 },
                 "dependencies": {
                     "type": "array",
@@ -637,19 +653,19 @@
                         "type": "string"
                     },
                     "default": [],
-                    "description": "List of prerequisite task names"
+                    "description": "依赖的前置任务名列表"
                 },
                 "arguments": {
                     "$ref": "#/definitions/arguments",
-                    "description": "Arguments passed to the template"
+                    "description": "传递给模板的参数"
                 },
                 "when": {
                     "type": "string",
-                    "description": "Condition expression; task executes only when evaluated to true"
+                    "description": "条件表达式，为 true 时才执行"
                 },
                 "continueOn": {
                     "$ref": "#/definitions/continueOn",
-                    "description": "Continue-on conditions"
+                    "description": "继续执行条件"
                 },
                 "withItems": {
                     "type": "array",
@@ -666,11 +682,11 @@
                             }
                         ]
                     },
-                    "description": "Loop execution with a static list"
+                    "description": "循环执行，静态列表"
                 },
                 "withParam": {
                     "type": "string",
-                    "description": "Loop execution with a dynamic parameter reference"
+                    "description": "循环执行，动态参数引用"
                 }
             },
             "required": [
@@ -688,12 +704,12 @@
                         "$ref": "#/definitions/task"
                     },
                     "minItems": 1,
-                    "description": "Task list"
+                    "description": "任务列表"
                 },
                 "failFast": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Fail fast; stop subsequent tasks if any task fails"
+                    "description": "快速失败，任一任务失败则停止后续任务"
                 }
             },
             "required": [
@@ -706,43 +722,47 @@
             "properties": {
                 "name": {
                     "$ref": "#/definitions/name",
-                    "description": "Template name"
+                    "description": "模板名称"
                 },
                 "inputs": {
                     "$ref": "#/definitions/inputs",
-                    "description": "Input definitions"
+                    "description": "输入定义"
                 },
                 "outputs": {
                     "$ref": "#/definitions/outputs",
-                    "description": "Output definitions"
+                    "description": "输出定义"
                 },
                 "dag": {
                     "$ref": "#/definitions/dagSpec",
-                    "description": "DAG definition (DAG template)"
+                    "description": "DAG 定义（DAG 模板）"
                 },
                 "executor": {
                     "$ref": "#/definitions/executor",
-                    "description": "Executor configuration (task template)"
+                    "description": "执行器配置（任务模板）"
                 },
                 "suspend": {
                     "$ref": "#/definitions/suspendSpec",
-                    "description": "Suspend configuration (suspend template)"
+                    "description": "暂停配置（Suspend 模板）"
+                },
+                "switch": {
+                    "$ref": "#/definitions/switchSpec",
+                    "description": "Switch 条件分支（Switch 模板）"
                 },
                 "queue": {
                     "type": "string",
-                    "description": "Queue name (required for task templates)"
+                    "description": "所属队列名称（任务模板必填）"
                 },
                 "timeout": {
                     "$ref": "#/definitions/duration",
-                    "description": "Task timeout"
+                    "description": "任务超时"
                 },
                 "retryStrategy": {
                     "$ref": "#/definitions/retryStrategy",
-                    "description": "Retry strategy"
+                    "description": "重试策略"
                 },
                 "resources": {
                     "$ref": "#/definitions/resources",
-                    "description": "Resource requirements"
+                    "description": "资源需求"
                 }
             },
             "required": [
@@ -757,6 +777,7 @@
                         "required": [
                             "executor",
                             "suspend",
+                            "switch",
                             "queue"
                         ]
                     }
@@ -769,7 +790,8 @@
                     "not": {
                         "required": [
                             "dag",
-                            "suspend"
+                            "suspend",
+                            "switch"
                         ]
                     }
                 },
@@ -781,6 +803,20 @@
                         "required": [
                             "dag",
                             "executor",
+                            "switch",
+                            "queue"
+                        ]
+                    }
+                },
+                {
+                    "required": [
+                        "switch"
+                    ],
+                    "not": {
+                        "required": [
+                            "dag",
+                            "executor",
+                            "suspend",
                             "queue"
                         ]
                     }
@@ -793,19 +829,23 @@
             "properties": {
                 "onStart": {
                     "$ref": "#/definitions/hookSpec",
-                    "description": "Triggered when the workflow starts"
+                    "description": "工作流开始时触发"
                 },
                 "onSuccess": {
                     "$ref": "#/definitions/hookSpec",
-                    "description": "Triggered when the workflow succeeds"
+                    "description": "工作流成功时触发"
                 },
                 "onFailure": {
                     "$ref": "#/definitions/hookSpec",
-                    "description": "Triggered when the workflow fails"
+                    "description": "工作流业务失败时触发（task 返回 Failed）"
+                },
+                "onError": {
+                    "$ref": "#/definitions/hookSpec",
+                    "description": "工作流系统错误时触发（task 返回 Error，如网络超时、executor 崩溃）"
                 },
                 "onExit": {
                     "$ref": "#/definitions/hookSpec",
-                    "description": "Triggered when the workflow exits (regardless of success or failure)"
+                    "description": "工作流退出时触发（无论成功失败）"
                 }
             },
             "additionalProperties": false
@@ -815,11 +855,11 @@
             "properties": {
                 "template": {
                     "type": "string",
-                    "description": "Hook template name"
+                    "description": "钩子模板名称"
                 },
                 "arguments": {
                     "$ref": "#/definitions/arguments",
-                    "description": "Arguments passed to the template"
+                    "description": "传递给模板的参数"
                 }
             },
             "required": [
@@ -832,27 +872,27 @@
             "properties": {
                 "entrypoint": {
                     "type": "string",
-                    "description": "Entrypoint template name"
+                    "description": "入口模板名称"
                 },
                 "arguments": {
                     "$ref": "#/definitions/arguments",
-                    "description": "Workflow-level arguments"
+                    "description": "Workflow 级别参数"
                 },
                 "globalTimeout": {
                     "$ref": "#/definitions/duration",
                     "default": "1h",
-                    "description": "Global timeout"
+                    "description": "全局超时"
                 },
                 "retryStrategy": {
                     "$ref": "#/definitions/retryStrategy",
-                    "description": "Global retry strategy"
+                    "description": "全局重试策略"
                 },
                 "priority": {
                     "type": "integer",
                     "minimum": 0,
                     "maximum": 1000,
                     "default": 500,
-                    "description": "Priority"
+                    "description": "优先级"
                 },
                 "queueQuota": {
                     "type": "object",
@@ -860,7 +900,7 @@
                         "type": "integer",
                         "minimum": 1
                     },
-                    "description": "Queue quota limits"
+                    "description": "队列配额限制"
                 },
                 "failurePolicy": {
                     "type": "string",
@@ -869,14 +909,14 @@
                         "continue"
                     ],
                     "default": "fail-fast",
-                    "description": "Failure policy"
+                    "description": "失败策略"
                 },
                 "maxNestedDepth": {
                     "type": "integer",
                     "minimum": 1,
                     "maximum": 10,
                     "default": 3,
-                    "description": "Maximum nesting depth"
+                    "description": "最大嵌套层级"
                 },
                 "templates": {
                     "type": "array",
@@ -884,15 +924,15 @@
                         "$ref": "#/definitions/template"
                     },
                     "minItems": 1,
-                    "description": "Template definition list"
+                    "description": "模板定义列表"
                 },
                 "hooks": {
                     "$ref": "#/definitions/hooks",
-                    "description": "Lifecycle hooks"
+                    "description": "生命周期钩子"
                 },
                 "workflowTemplateRef": {
                     "$ref": "#/definitions/workflowTemplateRef",
-                    "description": "Reference to an external template"
+                    "description": "引用外部模板"
                 }
             },
             "oneOf": [
@@ -926,11 +966,11 @@
             "properties": {
                 "name": {
                     "type": "string",
-                    "description": "Referenced template name"
+                    "description": "引用的模板名称"
                 },
                 "namespace": {
                     "type": "string",
-                    "description": "Namespace of the template"
+                    "description": "模板所在命名空间"
                 }
             },
             "required": [
@@ -943,12 +983,12 @@
             "properties": {
                 "schedule": {
                     "type": "string",
-                    "description": "Cron expression"
+                    "description": "Cron 表达式"
                 },
                 "timezone": {
                     "type": "string",
                     "default": "UTC",
-                    "description": "Timezone, e.g. Asia/Shanghai"
+                    "description": "时区，如 Asia/Shanghai"
                 },
                 "concurrencyPolicy": {
                     "type": "string",
@@ -958,37 +998,37 @@
                         "Replace"
                     ],
                     "default": "Allow",
-                    "description": "Concurrency policy"
+                    "description": "并发策略"
                 },
                 "startingDeadlineSeconds": {
                     "type": "integer",
                     "minimum": 0,
-                    "description": "Starting deadline in seconds"
+                    "description": "启动截止时间（秒）"
                 },
                 "successfulJobsHistoryLimit": {
                     "type": "integer",
                     "minimum": 0,
                     "default": 3,
-                    "description": "Number of successful job histories to retain"
+                    "description": "成功任务历史保留数量"
                 },
                 "failedJobsHistoryLimit": {
                     "type": "integer",
                     "minimum": 0,
                     "default": 1,
-                    "description": "Number of failed job histories to retain"
+                    "description": "失败任务历史保留数量"
                 },
                 "suspend": {
                     "type": "boolean",
                     "default": false,
-                    "description": "Whether to suspend scheduling"
+                    "description": "是否暂停调度"
                 },
                 "workflowSpec": {
                     "$ref": "#/definitions/workflowSpec",
-                    "description": "Workflow specification"
+                    "description": "Workflow 规格"
                 },
                 "workflowMetadata": {
                     "$ref": "#/definitions/metadata",
-                    "description": "Metadata template for generated Workflows"
+                    "description": "生成的 Workflow 的元数据模板"
                 }
             },
             "required": [
@@ -1002,25 +1042,25 @@
         {
             "type": "object",
             "title": "Workflow",
-            "description": "One-time execution workflow",
+            "description": "一次性执行的工作流",
             "properties": {
                 "apiVersion": {
                     "type": "string",
                     "const": "dag/v1",
-                    "description": "API version"
+                    "description": "API 版本"
                 },
                 "kind": {
                     "type": "string",
                     "const": "Workflow",
-                    "description": "Resource kind"
+                    "description": "资源类型"
                 },
                 "metadata": {
                     "$ref": "#/definitions/metadata",
-                    "description": "Metadata"
+                    "description": "元数据"
                 },
                 "spec": {
                     "$ref": "#/definitions/workflowSpec",
-                    "description": "Workflow specification"
+                    "description": "Workflow 规格"
                 }
             },
             "required": [
@@ -1034,25 +1074,25 @@
         {
             "type": "object",
             "title": "CronWorkflow",
-            "description": "Scheduled/periodic execution workflow",
+            "description": "定时/周期执行的工作流",
             "properties": {
                 "apiVersion": {
                     "type": "string",
                     "const": "dag/v1",
-                    "description": "API version"
+                    "description": "API 版本"
                 },
                 "kind": {
                     "type": "string",
                     "const": "CronWorkflow",
-                    "description": "Resource kind"
+                    "description": "资源类型"
                 },
                 "metadata": {
                     "$ref": "#/definitions/metadata",
-                    "description": "Metadata"
+                    "description": "元数据"
                 },
                 "spec": {
                     "$ref": "#/definitions/cronWorkflowSpec",
-                    "description": "CronWorkflow specification"
+                    "description": "CronWorkflow 规格"
                 }
             },
             "required": [
@@ -1066,25 +1106,25 @@
         {
             "type": "object",
             "title": "WorkflowTemplate",
-            "description": "Reusable workflow template",
+            "description": "可复用的工作流模板",
             "properties": {
                 "apiVersion": {
                     "type": "string",
                     "const": "dag/v1",
-                    "description": "API version"
+                    "description": "API 版本"
                 },
                 "kind": {
                     "type": "string",
                     "const": "WorkflowTemplate",
-                    "description": "Resource kind"
+                    "description": "资源类型"
                 },
                 "metadata": {
                     "$ref": "#/definitions/metadata",
-                    "description": "Metadata"
+                    "description": "元数据"
                 },
                 "spec": {
                     "$ref": "#/definitions/workflowSpec",
-                    "description": "WorkflowTemplate specification"
+                    "description": "WorkflowTemplate 规格"
                 }
             },
             "required": [
